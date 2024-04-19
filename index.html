@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">listenv</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0-9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.1-9000</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@
       <a href="https://future.callr.futureverse.org" class="external-link">future.callr</a>
     </li>
     <li>
+      <a href="https://future.mirai.futureverse.org" class="external-link">future.mirai</a>
+    </li>
+    <li>
       <a href="https://future.tests.futureverse.org" class="external-link">future.tests</a>
     </li>
     <li>
@@ -115,9 +118,6 @@
     </li>
     <li>
       <a href="https://future.tools.futureverse.org" class="external-link">future.tools (experimental)</a>
-    </li>
-    <li>
-      <a href="https://future.mirai.futureverse.org" class="external-link">future.mirai (experimental)</a>
     </li>
     <li>
       <a href="https://future.mapreduce.futureverse.org" class="external-link">future.mapreduce (experimental)</a>
@@ -458,7 +458,7 @@
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dim</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dimnames</span>(x) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>))</span>
 <span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> 2x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span></code></pre></div>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> <span class="dv">2</span>x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span></code></pre></div>
 <p>An easy way to quickly get an overview is to coerce to a list, e.g.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">as.list</span>(x)</span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  A B C</span>
@@ -496,7 +496,7 @@
 <p>Concurrently with dimensional names it is possible to have names of the individual elements just as for list environments without dimensions. For example,</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">names</span>(x) <span class="ot">&lt;-</span> letters[<span class="fu">seq_along</span>(x)]</span>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (‘a’, ‘b’, ‘c’, ..., ‘f’) arranged <span class="cf">in</span> 2x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (‘a’, ‘b’, ‘c’, ..., ‘f’) arranged <span class="cf">in</span> <span class="dv">2</span>x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="sc">&gt;</span> x[[<span class="st">"a"</span>]]</span>
 <span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">1</span></span>
 <span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="sc">&gt;</span> x[[<span class="st">"f"</span>]]</span>
@@ -516,15 +516,15 @@
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="dv">1</span>, <span class="dv">2</span>]</span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>A ‘listenv’ vector with <span class="dv">1</span> <span class="fu">element</span> (‘c’).</span>
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="dv">1</span>, <span class="dv">2</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">1</span> <span class="fu">element</span> (‘c’) arranged <span class="cf">in</span> 1x1 <span class="fu">rows</span> (‘a’) and <span class="fu">columns</span> (‘B’).</span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">1</span> <span class="fu">element</span> (‘c’) arranged <span class="cf">in</span> <span class="dv">1</span>x1 <span class="fu">rows</span> (‘a’) and <span class="fu">columns</span> (‘B’).</span>
 <span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">1</span>]</span>
-<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">4</span> <span class="fu">elements</span> (‘c’, ‘d’, ‘a’, ‘b’) arranged <span class="cf">in</span> 2x2 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘B’, ‘A’).</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">4</span> <span class="fu">elements</span> (‘c’, ‘d’, ‘a’, ‘b’) arranged <span class="cf">in</span> <span class="dv">2</span>x2 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘B’, ‘A’).</span>
 <span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="dv">2</span>, ]</span>
 <span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>A ‘listenv’ vector with <span class="dv">3</span> <span class="fu">elements</span> (‘b’, ‘d’, ‘f’).</span>
 <span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="dv">2</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">3</span> <span class="fu">elements</span> (‘b’, ‘d’, ‘f’) arranged <span class="cf">in</span> 1x3 <span class="fu">rows</span> (‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">3</span> <span class="fu">elements</span> (‘b’, ‘d’, ‘f’) arranged <span class="cf">in</span> <span class="dv">1</span>x3 <span class="fu">rows</span> (‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="sc">&gt;</span> x[<span class="st">"b"</span>, <span class="sc">-</span><span class="dv">2</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">2</span> <span class="fu">elements</span> (‘b’, ‘f’) arranged <span class="cf">in</span> 1x2 <span class="fu">rows</span> (‘b’) and <span class="fu">columns</span> (‘A’, ‘C’).</span></code></pre></div>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">2</span> <span class="fu">elements</span> (‘b’, ‘f’) arranged <span class="cf">in</span> <span class="dv">1</span>x2 <span class="fu">rows</span> (‘b’) and <span class="fu">columns</span> (‘A’, ‘C’).</span></code></pre></div>
 <p>Note, whenever dimensions are set using <code>dim(x) &lt;- dims</code> both the dimensional names and the element names are removed, e.g.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dim</span>(x) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">names</span>(x)</span>
@@ -535,11 +535,11 @@
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dim</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dimnames</span>(x) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>))</span>
 <span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> 2x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span></code></pre></div>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> <span class="dv">2</span>x3 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘A’, ‘B’, ‘C’).</span></code></pre></div>
 <p>Rows and columns can be dropped by assigning <code>NULL</code>, e.g. to drop the first and third column of a list-environment matrix, do:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="sc">&gt;</span> x[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">2</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> 2x1 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘B’).</span></code></pre></div>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">2</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> <span class="dv">2</span>x1 <span class="fu">rows</span> (‘a’, ‘b’) and <span class="fu">columns</span> (‘B’).</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="important-about-environments">Important about environments<a class="anchor" aria-label="anchor" href="#important-about-environments"></a>
@@ -581,11 +581,11 @@
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="sc">&gt;</span> x <span class="ot">&lt;-</span> <span class="fu">as.listenv</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dim</span>(x) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> 2x3 unnamed rows and columns.</span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> <span class="dv">2</span>x3 unnamed rows and columns.</span>
 <span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a><span class="sc">&gt;</span> y <span class="ot">&lt;-</span> x</span>
 <span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">dim</span>(y) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>)</span>
 <span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a><span class="sc">&gt;</span> x</span>
-<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> 3x2 unnamed rows and columns.</span></code></pre></div>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>A ‘listenv’ matrix with <span class="dv">6</span> <span class="fu">elements</span> (unnamed) arranged <span class="cf">in</span> <span class="dv">3</span>x2 unnamed rows and columns.</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
