@@ -7,6 +7,7 @@ permissions: read-all
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
+    environment: coverage
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
