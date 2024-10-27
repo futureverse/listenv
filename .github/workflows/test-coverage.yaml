@@ -29,6 +29,8 @@ jobs:
             clean = FALSE,
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
+          print(cov)
+          covr::codecov(coverage = coverage, token="${{secrets.CODECOV_TOKEN}}")
           covr::to_cobertura(cov)
         shell: Rscript {0}
 
@@ -39,13 +41,6 @@ jobs:
           plugin: noop
           disable_search: true
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Show testthat output
-        if: always()
-        run: |
-          ## --------------------------------------------------------------------
-          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
 
       - name: Upload test results
         if: failure()
