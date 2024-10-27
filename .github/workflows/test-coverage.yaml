@@ -30,7 +30,7 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
           print(cov)
-          covr::codecov(coverage = coverage, token="${{secrets.CODECOV_TOKEN}}")
+          covr::codecov(coverage = cov, token="${{secrets.CODECOV_TOKEN}}")
           covr::to_cobertura(cov)
         shell: Rscript {0}
 
