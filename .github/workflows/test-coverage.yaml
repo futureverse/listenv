@@ -16,7 +16,7 @@ jobs:
       - name: Assert CODECOV_TOKEN is set
         run: |
           if [[ -n "${{secrets.CODECOV_TOKEN}}" ]]; then
-            >&2 echo "ERROR: 'secrets.CODECOV_TOKEN' not set"
+            >&2 echo "::error::ERROR: 'secrets.CODECOV_TOKEN' not set"
             exit 1
           fi
 
