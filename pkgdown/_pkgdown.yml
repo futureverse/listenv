@@ -3,11 +3,11 @@ url: https://listenv.futureverse.org
 home:
   links:
   - text: Roadmap/Milestones
-    href: https://github.com/HenrikBengtsson/listenv/milestones
+    href: https://github.com/futureverse/listenv/milestones
   - text: The Futureverse Project
     href: https://www.futureverse.org/
   - text: Futureverse User Forum
-    href: https://github.com/HenrikBengtsson/future/discussions
+    href: https://github.com/futureverse/future/discussions
 
 navbar:
   structure:
