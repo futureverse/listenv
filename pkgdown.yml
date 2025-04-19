@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   listenv: listenv.html
-last_built: 2025-03-29T04:50Z
+last_built: 2025-04-19T16:45Z
 urls:
   reference: https://listenv.futureverse.org/reference
   article: https://listenv.futureverse.org/articles
