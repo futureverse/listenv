@@ -1,9 +1,9 @@
-pandoc: '3.4'
-pkgdown: 2.1.1
+pandoc: 3.8.2.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   listenv: listenv.html
-last_built: 2025-04-19T16:45Z
+last_built: 2025-11-01T20:58Z
 urls:
   reference: https://listenv.futureverse.org/reference
   article: https://listenv.futureverse.org/articles
