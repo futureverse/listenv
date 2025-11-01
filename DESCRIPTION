@@ -1,5 +1,5 @@
 Package: listenv
-Version: 0.9.1-9001
+Version: 0.9.1-9002
 Depends:
     R (>= 3.1.2)
 Suggests:
@@ -16,5 +16,5 @@ License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://listenv.futureverse.org, https://github.com/futureverse/listenv
 BugReports: https://github.com/futureverse/listenv/issues
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)

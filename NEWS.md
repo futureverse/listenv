@@ -1,6 +1,8 @@
 # Version (development version)
 
- * ...
+## Deprecated and Defunct
+
+ * `map()` is formally defunct; use `mapping()` instead.
 
 
 # Version 0.9.1 [2024-01-28]
