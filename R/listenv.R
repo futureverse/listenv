@@ -155,6 +155,8 @@ print.listenv <- function(x, ...) {
 
 #' Name map for elements of list environment
 #'
+#' _Warning: `map()` is defunct - use `mapping()` instead._
+#'
 #' @param x A list environment.
 #'
 #' @return A named character vector
