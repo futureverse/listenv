@@ -17,6 +17,6 @@ map(x, ...)
 A named character vector
 }
 \description{
-Name map for elements of list environment
+\emph{Warning: \code{map()} is defunct - use \code{mapping()} instead.}
 }
 \keyword{internal}

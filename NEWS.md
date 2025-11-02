@@ -1,3 +1,10 @@
+# Version 0.10.0 [2025-11-01]
+
+## Deprecated and Defunct
+
+ * `map()` is formally defunct; use `mapping()` instead.
+
+
 # Version 0.9.1 [2024-01-28]
 
 ## Documentation

@@ -1,89 +1,36 @@
-# aroma.core
-
-<details>
-
-* Version: 3.3.0
-* GitHub: https://github.com/HenrikBengtsson/aroma.core
-* Source code: https://github.com/cran/aroma.core
-* Date/Publication: 2022-11-15 18:30:13 UTC
-* Number of recursive dependencies: 70
-
-Run `revdep_details(, "aroma.core")` for more info
-
-</details>
-
-## In both
-
-*   checking package dependencies ... NOTE
-    ```
-    Packages suggested but not available for checking:
-      'sfit', 'expectile', 'HaarSeg', 'mpcbs'
-    ```
-
-# greed
-
-<details>
-
-* Version: 0.6.1
-* GitHub: https://github.com/comeetie/greed
-* Source code: https://github.com/cran/greed
-* Date/Publication: 2022-10-03 22:00:05 UTC
-* Number of recursive dependencies: 95
-
-Run `revdep_details(, "greed")` for more info
-
-</details>
-
-## In both
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 37.0Mb
-      sub-directories of 1Mb or more:
-        libs  34.8Mb
-    ```
-
-*   checking data for non-ASCII characters ... NOTE
-    ```
-      Note: found 989 marked UTF-8 strings
-    ```
-
 # signeR
 
 <details>
 
-* Version: 2.0.1
-* GitHub: https://github.com/rvalieris/signeR
+* Version: 2.12.0
+* GitHub: https://github.com/TojalLab/signeR
 * Source code: https://github.com/cran/signeR
-* Date/Publication: 2022-12-14
-* Number of recursive dependencies: 242
+* Date/Publication: 2025-10-29
+* Number of recursive dependencies: 233
 
-Run `revdep_details(, "signeR")` for more info
+Run `revdepcheck::revdep_details(, "signeR")` for more info
 
 </details>
 
 ## In both
 
-*   checking installed package size ... NOTE
+*   checking C++ specification ... NOTE
     ```
-      installed size is  6.7Mb
-      sub-directories of 1Mb or more:
-        R     1.1Mb
-        doc   4.7Mb
+      Specified C++14: please drop specification unless essential
     ```
 
 *   checking R code for possible problems ... NOTE
     ```
     covariate: no visible binding for global variable ‘.’
-    denovo: no visible binding for global variable
-      ‘BSgenome.Hsapiens.UCSC.hg19’
-    denovo: no visible binding for global variable
-      ‘BSgenome.Hsapiens.UCSC.hg38’
+    cox_as_data_frame2: no visible binding for global variable ‘term’
+    cox_as_data_frame2: no visible binding for global variable ‘estimate’
+    cox_as_data_frame2: no visible binding for global variable ‘conf.low’
+    cox_as_data_frame2: no visible binding for global variable ‘conf.high’
+    cox_as_data_frame2: no visible binding for global variable ‘p.value’
     explorepage: no visible binding for global variable ‘.’
-    fitting: no visible binding for global variable
-      ‘BSgenome.Hsapiens.UCSC.hg19’
-    fitting: no visible binding for global variable
-      ‘BSgenome.Hsapiens.UCSC.hg38’
+    genCountMatrixFromMAF: no visible binding for global variable
+      ‘Variant_Type’
+    genCountMatrixFromMAF: no visible binding for global variable
     ...
     ExposureCorrelation,SignExp-numeric: no visible binding for global
       variable ‘exposure’
@@ -92,9 +39,9 @@ Run `revdep_details(, "signeR")` for more info
     ExposureCorrelation,matrix-numeric: no visible binding for global
       variable ‘exposure’
     Undefined global functions or variables:
-      . BSgenome.Hsapiens.UCSC.hg19 BSgenome.Hsapiens.UCSC.hg38 Col Feature
-      Frequency Row Samples Signatures alt<- exposure fc project sig
-      sig_test
+      . Col Feature Frequency Reference_Allele Row Samples Signatures
+      Tumor_Seq_Allele1 Tumor_Seq_Allele2 Variant_Type conf.high conf.low
+      estimate exposure fc p.value project sig sig_test term
     ```
 
 *   checking Rd files ... NOTE

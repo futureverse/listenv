@@ -1,6 +1,6 @@
 #' Create a list environment
 #'
-#' @param \dots (optional) Named and/or unnamed objects to be assigned to the
+#' @param \ldots (optional) Named and/or unnamed objects to be assigned to the
 #' list environment.
 #'
 #' @return An environment of class `listenv`.
@@ -155,6 +155,8 @@ print.listenv <- function(x, ...) {
 
 #' Name map for elements of list environment
 #'
+#' _Warning: `map()` is defunct - use `mapping()` instead._
+#'
 #' @param x A list environment.
 #'
 #' @return A named character vector
@@ -170,7 +172,7 @@ mapping <- function(x, ...) {
 #' @export
 #' @keywords internal
 map <- function(x, ...) {
-  dfcn <- switch(Sys.getenv("R_LISTENV_MAP_DEPRECATED", "deprecated"),
+  dfcn <- switch(Sys.getenv("R_LISTENV_MAP_DEPRECATED", "defunct"),
     defunct = .Defunct,
               .Deprecated
   )
