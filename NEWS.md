@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 0.10.0 [2025-11-01]
 
 ## Deprecated and Defunct
 
