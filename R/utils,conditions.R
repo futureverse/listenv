@@ -1,9 +1,9 @@
 stopf <- function(fmt, ..., call. = TRUE, domain = NULL) {  #nolint
-  msg <- gettextf(fmt, ...)
+  msg <- sprintf(fmt, ...)
   msg <- .makeMessage(msg, domain = domain)
   if (is.call(call.)) {
     call <- call.
-  } else if (isTRUE(call)) {
+  } else if (isTRUE(call.)) {
     call <- sys.call(which = -1L)
   } else {
     call <- NULL
@@ -13,7 +13,7 @@ stopf <- function(fmt, ..., call. = TRUE, domain = NULL) {  #nolint
 }
 
 warnf <- function(fmt, ..., call. = TRUE, immediate. = FALSE, domain = NULL) {  #nolint
-  msg <- gettextf(fmt, ...)
+  msg <- sprintf(fmt, ...)
   ## Cannot tweak 'call' when immediate. = TRUE
   if (isTRUE(immediate.)) {
     warning(msg, call. = call., immediate. = immediate., domain = domain)
@@ -21,7 +21,7 @@ warnf <- function(fmt, ..., call. = TRUE, immediate. = FALSE, domain = NULL) {  
     msg <- .makeMessage(msg, domain = domain)
     if (is.call(call.)) {
       call <- call.
-    } else if (isTRUE(call)) {
+    } else if (isTRUE(call.)) {
       call <- sys.call(which = -1L)
     } else {
       call <- NULL
@@ -32,6 +32,5 @@ warnf <- function(fmt, ..., call. = TRUE, immediate. = FALSE, domain = NULL) {  
 }
 
 msgf <- function(fmt, ..., appendLF = FALSE, domain = NULL) {  #nolint
-  msg <- gettextf(fmt, ...)
-  message(msg, appendLF = appendLF, domain = domain)
+  message(sprintf(fmt, ...), appendLF = appendLF, domain = domain)
 }
