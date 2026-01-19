@@ -87,7 +87,7 @@ environments. To create an empty list environment, use
 A ‘listenv’ vector with 0 elements (unnamed).
 ```
 
-This can later can be populated using named assignments,
+This can later be populated using named assignments,
 
 ``` r
 > x$a <- 1
@@ -433,7 +433,7 @@ are immutable* in R. However, if we pass an environment instead,
 ```
 
 we find that `x` was affected by the assignment. This is because
-*environments are mutable* in R. Since list environments inherits from
+*environments are mutable* in R. Since list environments inherit from
 environments, this also goes for them, e.g.
 
 ``` r

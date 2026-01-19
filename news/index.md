@@ -55,7 +55,7 @@ CRAN release: 2022-12-16
 
 CRAN release: 2019-12-05
 
-### Signficant Changes
+### Significant Changes
 
 - S3 method [`lengths()`](https://rdrr.io/r/base/lengths.html) for
   `listenv` is no longer exported.
@@ -166,7 +166,7 @@ CRAN release: 2015-10-31
 ### New Features
 
 - Add support for assigning elements when creating list environment
-  similarly how to lists work, e.g. `x <- listenv(a = 1, b = 2)`.
+  similar to how lists work, e.g. `x <- listenv(a = 1, b = 2)`.
 
 - `length(x) <- n` now expand/truncate a list environment.
 
@@ -242,7 +242,7 @@ CRAN release: 2015-05-28
 
 ## Version 0.2.0
 
-### Signficant Changes
+### Significant Changes
 
 - Moved list environments from an in-house package to its own package.
 

@@ -33,7 +33,7 @@ Returns a list environment with permuted dimensions
 
 ## See also
 
-These functions works like
+These functions work like
 [`base::aperm()`](https://rdrr.io/r/base/aperm.html) and
 [`base::t()`](https://rdrr.io/r/base/t.html).
 
