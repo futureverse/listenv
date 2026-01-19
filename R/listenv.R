@@ -199,8 +199,8 @@ length.listenv <- function(x) {
 
 ## BACKPORT / WORKAROUND:
 ## lengths() was introduced in R 3.2.0, but only became a generic in R 3.3.0.
-## Since this packages is supported on R (>= 3.1.2), declaring above methods
-## as S3method() in the NAMESPACE would given an error on R (< 3.2.0).
+## Since this package is supported on R (>= 3.1.2), declaring above methods
+## as S3method() in the NAMESPACE would give an error on R (< 3.2.0).
 ## Because of this, lengths() is declared as a generic if missing, i.e.
 ## in R (< 3.2.0).  This will make lengths() for list environments to work
 ## with R (<= 3.2.0) and R (>= 3.3.0) but not with R 3.2.x versions.
@@ -462,7 +462,7 @@ to_index <- function(x, idxs) {
     }
 
     if (length(i) != 1L) {
-      stopf("Subsetting of more than one element at the time is not allowed for listenv's: %s", length(i))  #nolint
+      stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
     }
 
     if (i < 1L || i > n) {
@@ -858,7 +858,7 @@ remove_by_index <- function(x, i) {
   ## Drop elements from matrix or array, e.g. x[,2] <- NULL?
   if (ndim > 0L && nidxs > 1L && is.null(value)) {
     if (ndim - sum(missing) != 1L) {
-      stop("Only one dimension at the time can be dropped when assigning NULL")
+      stop("Only one dimension at a time can be dropped when assigning NULL")
     }
     envir <- parent.frame()
     dimnames <- dimnames(x)

@@ -42,7 +42,7 @@
 
 # Version 0.8.0 [2019-12-05]
 
-## Signficant Changes
+## Significant Changes
 
  * S3 method `lengths()` for `listenv` is no longer exported.
 
@@ -144,7 +144,7 @@
 ## New Features
  
  * Add support for assigning elements when creating list environment
-   similarly how to lists work, e.g. `x <- listenv(a = 1, b = 2)`.
+   similar to how lists work, e.g. `x <- listenv(a = 1, b = 2)`.
  
  * `length(x) <- n` now expand/truncate a list environment.
  
@@ -221,7 +221,7 @@
  
 # Version 0.2.0 [2015-05-19]
  
-## Signficant Changes
+## Significant Changes
  
  * Moved list environments from an in-house package to its own package.
  

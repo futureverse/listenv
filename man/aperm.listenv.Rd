@@ -36,5 +36,5 @@ print(x)
 
 }
 \seealso{
-These functions works like \code{\link[base:aperm]{base::aperm()}} and \code{\link[base:t]{base::t()}}.
+These functions work like \code{\link[base:aperm]{base::aperm()}} and \code{\link[base:t]{base::t()}}.
 }

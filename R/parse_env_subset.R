@@ -132,7 +132,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
             sQuote(code), call. = FALSE)
     }
     if (length(subset) == 0L) {
-      stopf("Subsetting of at least on element is required: %s",
+      stopf("Subsetting of at least one element is required: %s",
             sQuote(code), call. = FALSE)
     }
 
@@ -173,7 +173,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
         }
         dimnames <- dimnames(envir)
 
-        ## Expland NULL indices and map names to indices
+        ## Expand NULL indices and map names to indices
         for (kk in seq_along(subset)) {
           subset_kk <- subset[[kk]]
           if (is.null(subset_kk)) {

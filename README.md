@@ -85,7 +85,7 @@ List environments are created similarly to lists but also similarly to environme
 > x
 A ‘listenv’ vector with 0 elements (unnamed).
 ```
-This can later can be populated using named assignments,
+This can later be populated using named assignments,
 ```r
 > x$a <- 1
 > x
@@ -369,7 +369,7 @@ we see that `x` is unaffected by the assignment.  This is because _lists are imm
 > y$a
 [1] 0
 ```
-we find that `x` was affected by the assignment.  This is because _environments are mutable_ in R.  Since list environments inherits from environments, this also goes for them, e.g.
+we find that `x` was affected by the assignment.  This is because _environments are mutable_ in R.  Since list environments inherit from environments, this also goes for them, e.g.
 ```r
 > x <- listenv(a = 1)
 > y <- setA(x)
