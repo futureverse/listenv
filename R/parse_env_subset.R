@@ -181,7 +181,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           } else if (is.character(subset_kk)) {
             subset_kk <- match(subset_kk, dimnames[[kk]])
 	    if (anyNA(subset_kk)) {
-              unknown <- name[is.na(subset_kk)]
+              unknown <- subset[[kk]][is.na(subset_kk)]
               stopf("Unknown names for dimension #%d: %s",
 	            kk, hpaste(sQuote(unknown)))
 	    }
