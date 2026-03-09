@@ -1009,7 +1009,6 @@ all.equal.listenv <- function(target, current, all.names = TRUE,  #nolint
 
   ## Not all as.list() methods support 'all.names'
   if (!all.names) {
-    keep <-
     target <- target[!grepl("^[.]", names(target))]
     current <- current[!grepl("^[.]", names(current))]
   }
