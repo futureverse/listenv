@@ -5,6 +5,7 @@ oopts <- options(warn = 1)
 
 message("* get_variable() - multi-dimensional list environments ...")
 
+message(" - two dimensions")
 x <- listenv()
 length(x) <- 6
 dim(x) <- c(2, 3)
@@ -29,6 +30,15 @@ for (ii in seq_along(x)) {
   stopifnot(identical(var_a, var_v))
 }
 
+message(" - three dimensions")
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+value <- x[1, 2, 3]
+stopifnot(unlist(value) == 15)
+
+name <- get_variable(x, c(1, 2, 3))
+value2 <- get(name, envir = x, inherits = FALSE)
+stopifnot(unlist(value2) == 15)
 
 message("* get_variable() - multi-dimensional list environments ... DONE")
 

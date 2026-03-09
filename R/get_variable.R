@@ -48,7 +48,7 @@ get_variable.listenv <- function(x, name, mustExist = FALSE,
           stopf("Index #%d out of range [1,%d]: %s", kk, dim[kk], idxs[kk])
         }
       }
-      bases <- rev(c(cumprod(dim[-ndim]), 1))
+      bases <- c(1, cumprod(dim[-ndim]))
       idx <- sum(bases * (idxs - 1)) + 1
       name <- idx
     }

@@ -1,6 +1,9 @@
 # Version (development version)
 
- * ...
+## Bug Fixes
+
+ * `get_variable(x, c(i, j, k, ...))` would return the wrong value for
+   list environments with three or more dimensions.
 
 
 # Version 0.10.0 [2025-11-01]
