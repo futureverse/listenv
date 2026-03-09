@@ -228,7 +228,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           if (is.numeric(subset_kk)) {
             exists <- exists & (subset_kk >= 1 & subset_kk <= dim[kk])
           } else {
-	    stopf("INTERNAL ERROR: Subset for dimension #%d should already be an index: ", kk, mode(subset_kk))
+	    stopf("INTERNAL ERROR: Subset for dimension #%d should already be an index: %s", kk, mode(subset_kk))
           }
         }
         stop_if_not(length(exists) == length(idx))
