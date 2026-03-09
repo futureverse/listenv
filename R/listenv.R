@@ -613,7 +613,7 @@ new_variable <- function(envir, value, create = TRUE) {
   count <- get(".listenv_var_count", envir = envir, inherits = FALSE)
 
   count <- count + 1L
-  name <- sprintf(".listenv_var_%f", count)
+  name <- sprintf(".listenv_var_%d", count)
 
   if (!missing(value)) {
     assign(name, value, envir = envir, inherits = FALSE)
