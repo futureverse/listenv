@@ -1,5 +1,5 @@
 stopf <- function(fmt, ..., call. = TRUE, domain = NULL) {  #nolint
-  msg <- sprintf(fmt, ...)
+  msg <- gettextf(fmt, ...)
   msg <- .makeMessage(msg, domain = domain)
   if (is.call(call.)) {
     call <- call.
@@ -13,7 +13,7 @@ stopf <- function(fmt, ..., call. = TRUE, domain = NULL) {  #nolint
 }
 
 warnf <- function(fmt, ..., call. = TRUE, immediate. = FALSE, domain = NULL) {  #nolint
-  msg <- sprintf(fmt, ...)
+  msg <- gettextf(fmt, ...)
   ## Cannot tweak 'call' when immediate. = TRUE
   if (isTRUE(immediate.)) {
     warning(msg, call. = call., immediate. = immediate., domain = domain)
