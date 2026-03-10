@@ -52,11 +52,11 @@ A named list with elements:
 
 - `subset`:
 
-  A list of `NULL`. ...
+  A list of subsetting indices or `NULL`. ...
 
 - `idx`:
 
-  An integer vector or `NULL`. ...
+  An integer vector or `NA_integer_`. ...
 
 - `exists`:
 

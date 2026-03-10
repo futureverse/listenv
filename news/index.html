@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0-9021</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,15 +67,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="version-development-version">Version (development version)<a class="anchor" aria-label="anchor" href="#version-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.10.1" id="version-0101">Version 0.10.1<a class="anchor" aria-label="anchor" href="#version-0101"></a></h2>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li><p><code>as.list(x[c(n, 2)])</code> on a listenv <code>x</code> where <code>n</code> is out of range would return element values in the wrong location.</p></li>
+<h3 id="bug-fixes-0-10-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-10-1"></a></h3>
+<ul><li><p><code>as.list(x[c(n, 2)])</code> on a list environment <code>x</code> where <code>n</code> is out of range would return element values in the wrong location.</p></li>
 <li><p><code>get_variable(x, c(i, j, k, ...))</code> would return the wrong value for list environments with three or more dimensions.</p></li>
-<li><p><code>parse_env_subset(x[i, j])</code> would produce an error when the listenv <code>x</code> had named elements and a subscript was out of bounds.</p></li>
 <li><p><code>as.listenv(x)</code> on a list <code>x</code> with NULL elements would store them as <code>list(NULL)</code> instead of <code>NULL</code>, causing <code>as.list(as.listenv(x))</code> to not be identical to <code>x</code>.</p></li>
-<li><p><code>as.list(x, all.names = FALSE)</code> on an unnamed listenv <code>x</code> would return an empty list instead of all elements.</p></li>
-<li><p><code>x[, i] &lt;- NULL</code> on a listenv matrix <code>x</code> with partial dimnames (some dimensions named, others not) would produce an error.</p></li>
+<li><p><code>as.list(x, all.names = FALSE)</code> on an unnamed list enviroment <code>x</code> would return an empty list instead of all elements.</p></li>
+<li><p><code>x[, i] &lt;- NULL</code> on a list environment matrix <code>x</code> with partial dimnames (some dimensions named, others not) would produce an error.</p></li>
+<li><p><code>parse_env_subset(x[i, j])</code> would produce an error when the list environment <code>x</code> had named elements and a subscript was out of bounds.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
