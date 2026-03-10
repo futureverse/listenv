@@ -1,5 +1,9 @@
 # Changelog
 
+## Version (development version)
+
+- …
+
 ## Version 0.10.1
 
 ### Bug Fixes
