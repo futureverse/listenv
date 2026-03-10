@@ -7,23 +7,23 @@ They are implemented by the
 [listenv](https://cran.r-project.org/package=listenv) package. The main
 features of a list environment are summarized in the below table:
 
-| Property                                                                                                                                                                                                                            | list environments | lists | environments |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------:|:-----:|:------------:|
-| Number of elements, e.g. [`length()`](https://rdrr.io/r/base/length.html)                                                                                                                                                           |        yes        |  yes  |     yes      |
-| Named elements, e.g. [`names()`](https://rdrr.io/r/base/names.html), `x$a` and `x[["a"]]`                                                                                                                                           |        yes        |  yes  |     yes      |
-| Duplicated names                                                                                                                                                                                                                    |        yes        |  yes  |              |
-| Element names are optional                                                                                                                                                                                                          |        yes        |  yes  |              |
-| Indexed elements, e.g. `x[[4]]`                                                                                                                                                                                                     |        yes        |  yes  |              |
-| Dimensions, e.g. `dim(x)`, `t(x)`, and `aperm(x, c(3,1,2))`                                                                                                                                                                         |        yes        |  yes  |              |
-| Names of dimensions, e.g. `dimnames(x)`                                                                                                                                                                                             |        yes        |  yes  |              |
-| Indexing by dimensions, e.g. `x[[2, 4]]` and `x[[2, "D"]]`                                                                                                                                                                          |        yes        |  yes  |              |
-| Multi-element subsetting, e.g. `x[c("a", "c")]`, `x[-1]` and `x[2:1, , 3]`                                                                                                                                                          |        yes        |  yes  |              |
-| Multi-element subsetting preserves element names                                                                                                                                                                                    |        yes        |       |              |
-| Resizing, e.g. `length(x) <- 6`                                                                                                                                                                                                     |        yes        |  yes  |              |
-| Removing elements by assigning NULL, e.g. `x$c <- NULL` and `x[1:3] <- NULL`                                                                                                                                                        |        yes        |  yes  |              |
-| Removing parts of dimensions by assigning NULL, e.g. `x[,2] <- NULL`                                                                                                                                                                |        yes        |       |              |
-| Mutable, e.g. `y <- x; y$a <- 3; identical(y, x)`                                                                                                                                                                                   |        yes        |       |     yes      |
-| Compatible\* with [`assign()`](https://rdrr.io/r/base/assign.html), [`delayedAssign()`](https://rdrr.io/r/base/delayedAssign.html), [`get()`](https://rdrr.io/r/base/get.html) and [`exists()`](https://rdrr.io/r/base/exists.html) |        yes        |       |     yes      |
+| Property | list environments | lists | environments |
+|----|:--:|:--:|:--:|
+| Number of elements, e.g. [`length()`](https://rdrr.io/r/base/length.html) | yes | yes | yes |
+| Named elements, e.g. [`names()`](https://rdrr.io/r/base/names.html), `x$a` and `x[["a"]]` | yes | yes | yes |
+| Duplicated names | yes | yes |  |
+| Element names are optional | yes | yes |  |
+| Indexed elements, e.g. `x[[4]]` | yes | yes |  |
+| Dimensions, e.g. `dim(x)`, `t(x)`, and `aperm(x, c(3,1,2))` | yes | yes |  |
+| Names of dimensions, e.g. `dimnames(x)` | yes | yes |  |
+| Indexing by dimensions, e.g. `x[[2, 4]]` and `x[[2, "D"]]` | yes | yes |  |
+| Multi-element subsetting, e.g. `x[c("a", "c")]`, `x[-1]` and `x[2:1, , 3]` | yes | yes |  |
+| Multi-element subsetting preserves element names | yes |  |  |
+| Resizing, e.g. `length(x) <- 6` | yes | yes |  |
+| Removing elements by assigning NULL, e.g. `x$c <- NULL` and `x[1:3] <- NULL` | yes | yes |  |
+| Removing parts of dimensions by assigning NULL, e.g. `x[,2] <- NULL` | yes |  |  |
+| Mutable, e.g. `y <- x; y$a <- 3; identical(y, x)` | yes |  | yes |
+| Compatible\* with [`assign()`](https://rdrr.io/r/base/assign.html), [`delayedAssign()`](https://rdrr.io/r/base/delayedAssign.html), [`get()`](https://rdrr.io/r/base/get.html) and [`exists()`](https://rdrr.io/r/base/exists.html) | yes |  | yes |
 
 For example,
 

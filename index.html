@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0-9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0-9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,109 +105,109 @@
 <col width="6%">
 <col width="11%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Property</th>
 <th align="center">list environments</th>
 <th align="center">lists</th>
 <th align="center">environments</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Number of elements, e.g. <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Named elements, e.g. <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code>, <code>x$a</code> and <code>x[["a"]]</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Duplicated names</td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Element names are optional</td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Indexed elements, e.g. <code>x[[4]]</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Dimensions, e.g. <code>dim(x)</code>, <code>t(x)</code>, and <code>aperm(x, c(3,1,2))</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Names of dimensions, e.g. <code>dimnames(x)</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Indexing by dimensions, e.g. <code>x[[2, 4]]</code> and <code>x[[2, "D"]]</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Multi-element subsetting, e.g. <code>x[c("a", "c")]</code>, <code>x[-1]</code> and <code>x[2:1, , 3]</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Multi-element subsetting preserves element names</td>
 <td align="center">yes</td>
 <td align="center"></td>
 <td align="center"></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Resizing, e.g. <code>length(x) &lt;- 6</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Removing elements by assigning NULL, e.g. <code>x$c &lt;- NULL</code> and <code>x[1:3] &lt;- NULL</code>
 </td>
 <td align="center">yes</td>
 <td align="center">yes</td>
 <td align="center"></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Removing parts of dimensions by assigning NULL, e.g. <code>x[,2] &lt;- NULL</code>
 </td>
 <td align="center">yes</td>
 <td align="center"></td>
 <td align="center"></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Mutable, e.g. <code>y &lt;- x; y$a &lt;- 3; identical(y, x)</code>
 </td>
 <td align="center">yes</td>
 <td align="center"></td>
 <td align="center">yes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Compatible* with <code><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign()</a></code>, <code><a href="https://rdrr.io/r/base/delayedAssign.html" class="external-link">delayedAssign()</a></code>, <code><a href="https://rdrr.io/r/base/get.html" class="external-link">get()</a></code> and <code><a href="https://rdrr.io/r/base/exists.html" class="external-link">exists()</a></code>
 </td>
 <td align="center">yes</td>

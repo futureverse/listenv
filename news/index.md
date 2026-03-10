@@ -2,7 +2,13 @@
 
 ## Version (development version)
 
-- …
+### Bug Fixes
+
+- `as.list(x[c(n, 2)])` on a listenv `x` where `n` is out of range would
+  return element values in the wrong location.
+
+- `get_variable(x, c(i, j, k, ...))` would return the wrong value for
+  list environments with three or more dimensions.
 
 ## Version 0.10.0
 
