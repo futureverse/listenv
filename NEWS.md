@@ -2,24 +2,26 @@
 
 ## Bug Fixes
 
- * `as.list(x[c(n, 2)])` on a listenv `x` where `n` is out of range
-   would return element values in the wrong location.
+ * `as.list(x[c(n, 2)])` on a list environment `x` where `n` is out of
+   range would return element values in the wrong location.
  
  * `get_variable(x, c(i, j, k, ...))` would return the wrong value for
    list environments with three or more dimensions.
 
- * `parse_env_subset(x[i, j])` would produce an error when the
-   listenv `x` had named elements and a subscript was out of bounds.
+ * `parse_env_subset(x[i, j])` would produce an error when the list
+   environment `x` had named elements and a subscript was out of
+   bounds.
 
  * `as.listenv(x)` on a list `x` with NULL elements would store them
    as `list(NULL)` instead of `NULL`, causing `as.list(as.listenv(x))`
    to not be identical to `x`.
 
- * `as.list(x, all.names = FALSE)` on an unnamed listenv `x` would
-   return an empty list instead of all elements.
+ * `as.list(x, all.names = FALSE)` on an unnamed list enviroment `x`
+   would return an empty list instead of all elements.
 
- * `x[, i] <- NULL` on a listenv matrix `x` with partial dimnames
-   (some dimensions named, others not) would produce an error.
+ * `x[, i] <- NULL` on a list environment matrix `x` with partial
+   dimnames (some dimensions named, others not) would produce an
+   error.
 
 
 # Version 0.10.0 [2025-11-01]
