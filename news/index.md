@@ -13,6 +13,16 @@
 - `parse_env_subset(x[i, j])` would produce an error when the listenv
   `x` had named elements and a subscript was out of bounds.
 
+- `as.listenv(x)` on a list `x` with NULL elements would store them as
+  `list(NULL)` instead of `NULL`, causing `as.list(as.listenv(x))` to
+  not be identical to `x`.
+
+- `as.list(x, all.names = FALSE)` on an unnamed listenv `x` would return
+  an empty list instead of all elements.
+
+- `x[, i] <- NULL` on a listenv matrix `x` with partial dimnames (some
+  dimensions named, others not) would produce an error.
+
 ## Version 0.10.0
 
 CRAN release: 2025-11-02
