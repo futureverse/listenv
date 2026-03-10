@@ -48,3 +48,47 @@ for (ndim in 0:5) {
 
 message("*** aperm() and t() ... DONE")
 
+
+message("*** aperm() and t() - exceptions ...")
+
+## aperm on non-array
+x <- as.listenv(1:3)
+res <- try(aperm(x, perm = 1), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## aperm with wrong 'perm' length
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- try(aperm(x, perm = 1:3), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## aperm with out-of-range 'perm'
+res <- try(aperm(x, perm = c(1, 3)), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## aperm with duplicated 'perm'
+res <- try(aperm(x, perm = c(1, 1)), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## aperm identity (no-op)
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("r1", "r2"), c("c1", "c2", "c3"))
+y <- aperm(x, perm = 1:2)
+stopifnot(identical(as.list(y), as.list(x)))
+
+
+message("*** t.listenv - 1D array ...")
+x <- as.listenv(1:3)
+dim(x) <- 3L
+y <- t(x)
+stopifnot(identical(dim(y), c(1L, 3L)))
+
+message("*** t.listenv - error for 3D array ...")
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+res <- try(t(x), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("*** aperm() and t() - exceptions ... DONE")
+

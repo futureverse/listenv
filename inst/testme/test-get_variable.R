@@ -95,6 +95,58 @@ stopifnot(inherits(res, "try-error"))
 
 
 
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Odds and ends
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## get_variable with 'mustExist = TRUE' on named list environment
+x <- listenv(a = 1, b = 2)
+var <- get_variable(x, "a", mustExist = TRUE)
+stopifnot(!is.na(var))
+
+## get_variable with 'create = FALSE' on numeric index
+x <- listenv()
+length(x) <- 3L
+var <- get_variable(x, 2L, create = FALSE)
+stopifnot(!is.na(var))
+stopifnot(length(x) == 3L)
+
+## get_variable with numeric index expanding the mapping
+x <- listenv()
+length(x) <- 2L
+var <- get_variable(x, 5L)
+stopifnot(length(x) == 5L)
+
+## get_variable with named character on existing name
+x <- listenv(a = 1, b = 2)
+var <- get_variable(x, "a")
+stopifnot(!is.na(var))
+
+## get_variable with named character creating new name
+x <- listenv(a = 1)
+var <- get_variable(x, "z")
+stopifnot(!is.na(var))
+stopifnot(length(x) == 2L)
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Multi-dimensional get_variable - exceptions
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+
+## Wrong number of indices
+res <- try(get_variable(x, c(1, 2, 3)), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Missing values in index
+res <- try(get_variable(x, c(NA_integer_, 1L)), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Out-of-range index
+res <- try(get_variable(x, c(3, 1)), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())
