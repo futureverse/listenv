@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0-9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0-9012</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,6 +72,7 @@
 <h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li><p><code>as.list(x[c(n, 2)])</code> on a listenv <code>x</code> where <code>n</code> is out of range would return element values in the wrong location.</p></li>
 <li><p><code>get_variable(x, c(i, j, k, ...))</code> would return the wrong value for list environments with three or more dimensions.</p></li>
+<li><p><code>parse_env_subset(x[i, j])</code> would produce an error when the listenv <code>x</code> had named elements and a subscript was out of bounds.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
