@@ -315,6 +315,63 @@ stopifnot(inherits(res, "try-error"))
 res <- try(target <- parse_env_subset(x@a, substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
+## Object not found
+if (exists("nonexistent_obj_xyz", envir = globalenv())) {
+  rm("nonexistent_obj_xyz", envir = globalenv())
+}
+res <- try(parse_env_subset(nonexistent_obj_xyz[["a"]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Object not an environment
+z_not_env <- 42
+res <- try(parse_env_subset(z_not_env[["a"]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+rm(z_not_env)
+
+## [[ with non-existing symbol in envir
+x <- listenv()
+res <- try(parse_env_subset(x[[nonexistent_var_xyz]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## NA in subset
+x <- listenv()
+x[[1]] <- 1
+res <- try(parse_env_subset(x[[NA]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Unknown dimnames in multi-dim
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("a", "b"), c("c", "d", "e"))
+res <- try(parse_env_subset(x[["z", "c"]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Negative indices with [[ on multi-dim
+res <- try(parse_env_subset(x[[-1, 1]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Mixed pos/neg in multi-dim [
+res <- try(parse_env_subset(x[c(-1, 1), 1], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Negative indices in 1D [[
+x <- listenv()
+x[1:3] <- 1:3
+res <- try(parse_env_subset(x[[-1]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Mixed pos/neg in 1D [
+res <- try(parse_env_subset(x[c(-1, 1)], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Multi-dim subset on non-listenv environment
+x <- new.env()
+res <- try(parse_env_subset(x[1, 2], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
 message("*** parse_env_subset() - exceptions ... DONE")
 
 

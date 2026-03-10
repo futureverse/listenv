@@ -50,8 +50,13 @@ as.listenv.list <- function(x, ...) {
   names(res) <- names <- names(x)
   for (kk in seq_len(nx)) {
     value <- x[[kk]]
-    if (is.null(value)) value <- list(NULL)
-    res[[kk]] <- value
+    if (is.null(value)) {
+      ## Cannot use res[[kk]] <- NULL because that removes the element.
+      ## Instead, assign NULL directly to the internal variable.
+      assign_by_index(res, i = kk, value = value)
+    } else {
+      res[[kk]] <- value
+    }
   }
 
   ## Set dimensions?
@@ -199,8 +204,8 @@ length.listenv <- function(x) {
 
 ## BACKPORT / WORKAROUND:
 ## lengths() was introduced in R 3.2.0, but only became a generic in R 3.3.0.
-## Since this packages is supported on R (>= 3.1.2), declaring above methods
-## as S3method() in the NAMESPACE would given an error on R (< 3.2.0).
+## Since this package is supported on R (>= 3.1.2), declaring above methods
+## as S3method() in the NAMESPACE would give an error on R (< 3.2.0).
 ## Because of this, lengths() is declared as a generic if missing, i.e.
 ## in R (< 3.2.0).  This will make lengths() for list environments to work
 ## with R (<= 3.2.0) and R (>= 3.3.0) but not with R 3.2.x versions.
@@ -292,7 +297,7 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
   names <- names(x)
 
   ## Drop names starting with a period
-  if (!all.names && nvars > 0) {
+  if (!all.names && nvars > 0 && !is.null(names)) {
     keep <- !grepl("^[.]", names)
     vars <- vars[keep]
     names <- names[keep]
@@ -462,7 +467,7 @@ to_index <- function(x, idxs) {
     }
 
     if (length(i) != 1L) {
-      stopf("Subsetting of more than one element at the time is not allowed for listenv's: %s", length(i))  #nolint
+      stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
     }
 
     if (i < 1L || i > n) {
@@ -576,9 +581,9 @@ to_index <- function(x, idxs) {
     }
 
     # Ignore out-of-range indices
-    j <- i[i <= nmap]
-    for (kk in seq_along(j)) {
-      value <- x[[j[kk]]]
+    valid <- which(i <= nmap)
+    for (kk in valid) {
+      value <- x[[i[kk]]]
       if (!is.null(value)) res[[kk]] <- value
     }
   }
@@ -613,7 +618,7 @@ new_variable <- function(envir, value, create = TRUE) {
   count <- get(".listenv_var_count", envir = envir, inherits = FALSE)
 
   count <- count + 1L
-  name <- sprintf(".listenv_var_%f", count)
+  name <- sprintf(".listenv_var_%d", count)
 
   if (!missing(value)) {
     assign(name, value, envir = envir, inherits = FALSE)
@@ -858,7 +863,7 @@ remove_by_index <- function(x, i) {
   ## Drop elements from matrix or array, e.g. x[,2] <- NULL?
   if (ndim > 0L && nidxs > 1L && is.null(value)) {
     if (ndim - sum(missing) != 1L) {
-      stop("Only one dimension at the time can be dropped when assigning NULL")
+      stop("Only one dimension at a time can be dropped when assigning NULL")
     }
     envir <- parent.frame()
     dimnames <- dimnames(x)
@@ -881,7 +886,7 @@ remove_by_index <- function(x, i) {
       }
       stop_if_not(is.numeric(idxs_dd))
       dim[dd] <- dim[dd] - length(idxs_dd)
-      dimnames[[dd]] <- dimnames[[dd]][-idxs_dd]
+      dimnames[dd] <- list(dimnames[[dd]][-idxs_dd])
     }
     idxs_drop <- sort(unique(idxs_drop), decreasing = TRUE)
     for (i in idxs_drop) x <- remove_by_index(x, i = i)
@@ -1009,7 +1014,6 @@ all.equal.listenv <- function(target, current, all.names = TRUE,  #nolint
 
   ## Not all as.list() methods support 'all.names'
   if (!all.names) {
-    keep <-
     target <- target[!grepl("^[.]", names(target))]
     current <- current[!grepl("^[.]", names(current))]
   }

@@ -34,7 +34,7 @@ get_variable.listenv <- function(x, name, mustExist = FALSE,
   } else {
     ndim <- length(dim)
     if (length(name) != 1L && length(name) != ndim) {
-      stopf("Subscript must be a scalar or of equal length to the number of dimension (%d): %d", ndim, length(name), call. = FALSE)  #nolint
+      stopf("Subscript must be a scalar or of equal length to the number of dimensions (%d): %d", ndim, length(name), call. = FALSE)  #nolint
     }
 
     ## Map multi-dimensional index to scalar index
@@ -48,7 +48,7 @@ get_variable.listenv <- function(x, name, mustExist = FALSE,
           stopf("Index #%d out of range [1,%d]: %s", kk, dim[kk], idxs[kk])
         }
       }
-      bases <- rev(c(cumprod(dim[-ndim]), 1))
+      bases <- c(1, cumprod(dim[-ndim]))
       idx <- sum(bases * (idxs - 1)) + 1
       name <- idx
     }

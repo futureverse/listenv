@@ -204,9 +204,17 @@ y <- as.list(x, all.names = FALSE, sorted = TRUE)
 str(y)
 stopifnot(identical(names(y), c("", "", "", "b", "c")))
 
+## as.list(x, all.names = FALSE) on unnamed listenv should keep all elements
+x <- as.listenv(1:3)
+y <- as.list(x, all.names = FALSE)
+stopifnot(
+  length(y) == 3L,
+  identical(y, as.list(x))
+)
 
 x <- listenv()
 x[c("a", "b", "c")] <- list(1, NULL, 3)
+stopifnot(length(x) == 3)
 
 y <- x[NULL]
 print(y)
@@ -261,6 +269,14 @@ print(y)
 z <- as.list(y)
 print(z)
 stopifnot(identical(z, rep(list(a = 1), times = 6L)))
+
+y <- x[c(4, 3)]
+print(y)
+stopifnot(identical(names(y), c("", "c")))
+z <- as.list(y)
+print(z)
+stopifnot(identical(names(z), c("", "c")))
+stopifnot(identical(z, list(NULL, c = 3)))
 
 y <- x[1:10]
 print(y)
@@ -603,6 +619,10 @@ stopifnot(identical(names(x), c("1", "3")))
 
 
 ## Expand and shrink
+x <- listenv(a = 1, b = 2)
+length(x) <- 2L
+stopifnot(length(x) == 2L)
+
 x <- listenv()
 stopifnot(length(x) == 0L)
 length(x) <- 3L
@@ -761,6 +781,197 @@ res <- try(x[[c("a", "b")]] <- 1, silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
 res <- try(x[[""]] <- 1, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## print() - various cases
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## print with 1 element
+x <- listenv(a = 1)
+print(x)
+
+## print with no named elements
+x <- listenv()
+names(x) <- character(0L)
+print(x)
+
+## print matrix with all dimnames
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("r1", "r2"), c("c1", "c2", "c3"))
+print(x)
+
+## print matrix with only row names
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("r1", "r2"), NULL)
+print(x)
+
+## print matrix with only column names
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(NULL, c("c1", "c2", "c3"))
+print(x)
+
+## print matrix with NULL dimnames
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(NULL, NULL)
+print(x)
+
+## print matrix with no dimnames
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+print(x)
+
+## print 3d-array with all dimnames
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+dimnames(x) <- list(letters[1:2], letters[1:3], letters[1:4])
+print(x)
+
+## print 3d-array with partial dimnames
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+dimnames(x) <- list(letters[1:2], NULL, letters[1:4])
+print(x)
+
+## print 3d-array with no dimnames
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+print(x)
+
+## print 3d-array with NULL dimnames
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+dimnames(x) <- list(NULL, NULL, NULL)
+print(x)
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## map() is defunct
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+res <- try(map(x), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Additional exception handling for assign/remove helpers
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv()
+length(x) <- 3L
+names(x) <- c("a", "b", "c")
+
+## remove_by_name: non-existing name
+x$nonexistent <- NULL
+
+## remove_by_index: out of range (no-op)
+x[[10L]] <- NULL
+
+## [<- with zero-length replacement value
+res <- try({ x[1:2] <- list() }, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## all.equal.listenv - identical objects
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+stopifnot(isTRUE(all.equal(x, x)))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[ with non-existing character name returns NULL
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+stopifnot(is.null(x[["nonexistent"]]))
+
+## [[ on unassigned (NA placeholder) element returns NULL
+x <- listenv()
+length(x) <- 3L
+stopifnot(is.null(x[[2]]))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [.listenv and [<-.listenv dimension mismatch
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+
+## [.listenv: wrong number of dimensions
+res <- try(x[1, 2, 3], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## [<-.listenv: wrong number of dimensions
+res <- try(x[1, 2, 3] <- 1, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## [<-.listenv: multi-dim NULL with wrong number of non-missing dims
+res <- try(x[, ] <- NULL, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## [.listenv: mixed negative and positive subscripts
+res <- try(x[c(-1, 1)], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## as.listenv.environment
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+e <- new.env(parent = emptyenv())
+e$x <- 1
+e$y <- 2
+x <- as.listenv(e)
+stopifnot(length(x) == 2)
+y <- as.list(x)
+stopifnot(all(sort(names(y)) == c("x", "y")))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[ with non-existing name returns NULL
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+stopifnot(is.null(x[["nonexistent"]]))
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Negative length error
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv()
+res <- try(length(x) <- -1, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## map() is defunct
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1)
+res <- try(listenv::map(x), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Test deprecated path of map()
+Sys.setenv(R_LISTENV_MAP_DEPRECATED = "deprecated")
+res <- withCallingHandlers(listenv::map(x), warning = function(w) {
+  invokeRestart("muffleWarning")
+})
+stopifnot(is.character(res))
+Sys.unsetenv("R_LISTENV_MAP_DEPRECATED")
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Mixing positive and negative subscripts in [
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv()
+x[1:3] <- 1:3
+res <- try(x[c(1, -1)], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [<- with zero-length replacement
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv()
+x[1:3] <- 1:3
+res <- try(x[1] <- list(), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
 

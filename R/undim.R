@@ -10,7 +10,7 @@
 #' This function does `attr(x, "dim") <- NULL`, which automatically also does
 #' `attr(x, "dimnames") <- NULL`.
 #' However, other attributes such as names attributes are preserved,
-#' which is not the case if one do `dim(x) <- NULL`.
+#' which is not the case if one does `dim(x) <- NULL`.
 #'
 #' @export
 #' @aliases undim.default

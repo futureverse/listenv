@@ -30,4 +30,9 @@ names(y) <- names
 z <- undim(y)
 stopifnot(identical(names(z), names))
 
+## Vectors
+y <- as.listenv(list(a = 1, b = 2, c = 3))
+z <- undim(y)
+stopifnot(identical(z, y))
+
 message("*** undim() ... DONE")

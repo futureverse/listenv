@@ -11,7 +11,7 @@ hpaste <- function(..., sep = "", collapse = ", ", last_collapse = NULL,
   x <- paste(..., sep = sep)
   n <- length(x)
 
-  # Nothing todo?
+  # Nothing to do?
   if (n == 0) return(x)
   if (is.null(collapse)) return(x)
 

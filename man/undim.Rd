@@ -23,6 +23,6 @@ Removes the dimension of an object
 This function does \code{attr(x, "dim") <- NULL}, which automatically also does
 \code{attr(x, "dimnames") <- NULL}.
 However, other attributes such as names attributes are preserved,
-which is not the case if one do \code{dim(x) <- NULL}.
+which is not the case if one does \code{dim(x) <- NULL}.
 }
 \keyword{internal}

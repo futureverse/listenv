@@ -315,6 +315,25 @@ y[, , 3] <- NULL
 print(as.list(y))
 stopifnot(identical(as.list(y), x))
 
+message("- Dropping dimensions from matrix with partial dimnames")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("r1", "r2"), NULL)
+x[, 1] <- NULL
+stopifnot(
+  identical(dim(x), c(2L, 2L)),
+  identical(dimnames(x), list(c("r1", "r2"), NULL))
+)
+
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(NULL, c("c1", "c2", "c3"))
+x[1, ] <- NULL
+stopifnot(
+  identical(dim(x), c(1L, 3L)),
+  identical(dimnames(x), list(NULL, c("c1", "c2", "c3")))
+)
+
 message("* Dropping dimensions from matrix/array by assigning NULL ... DONE")
 
 
@@ -395,6 +414,89 @@ x[[3]] <- NULL
 print(x)
 stopifnot(is.null(dim(x)))
 stopifnot(!is.null(names(x)), identical(names(x), c("a", "b", "d", "e", "f")))
+
+message("* dim_na() exceptions ...")
+x <- as.listenv(1:6)
+res <- try(dim_na(x) <- c(NA, NA), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* is.matrix() and is.array() ...")
+x <- as.listenv(1:6)
+stopifnot(!is.matrix(x))
+stopifnot(!is.array(x))
+
+dim(x) <- c(2, 3)
+stopifnot(is.matrix(x))
+stopifnot(is.array(x))
+
+dim(x) <- c(2, 3, 1)
+stopifnot(!is.matrix(x))
+stopifnot(is.array(x))
+
+message("* as.vector() ...")
+x <- as.listenv(1:6)
+y <- as.vector(x)
+stopifnot(is.list(y), length(y) == 6)
+y <- as.vector(x, mode = "integer")
+stopifnot(is.integer(y), length(y) == 6)
+
+message("* as.matrix() ...")
+x <- as.listenv(1:6)
+y <- as.matrix(x)
+stopifnot(is.matrix(y), nrow(y) == 6, ncol(y) == 1)
+
+dim(x) <- c(2, 3)
+y <- as.matrix(x)
+stopifnot(is.matrix(y), nrow(y) == 2, ncol(y) == 3)
+
+message("* dimnames() exceptions ...")
+x <- as.listenv(1:6)
+res <- try(dimnames(x) <- list(letters[1:6]), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+dim(x) <- c(2, 3)
+res <- try(dimnames(x) <- list(letters[1:3], letters[1:3]), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Wrong number of dimensions in [ and [<- ...")
+x <- as.listenv(1:24)
+dim(x) <- c(2, 3, 4)
+res <- try(x[1, 2], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+res <- try(x[1, 2] <- 99, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Character subscript not found ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("a", "b"), c("c", "d", "e"))
+res <- try(x[["z", "c"]], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Invalid subscript type ...")
+res <- try(x[[1 + 2i, 1]], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Logical subscript shorter than dimension (recycled) ...")
+y <- x[c(TRUE), , drop = FALSE]
+stopifnot(length(y) == 6)
+
+message("* dim(x) <- c(2,3) on non-empty with wrong length ...")
+x <- as.listenv(1:4)
+res <- try(dim(x) <- c(2, 3), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Only one dimension can be dropped at the time ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- try(x[1, 2] <- NULL, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* Removing by zero-length index has no effect ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+x[integer(0), ] <- NULL
+stopifnot(length(x) == 6)
 
 message("* List environment and multiple dimensions ... DONE")
 

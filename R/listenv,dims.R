@@ -12,7 +12,7 @@ dim.listenv <- function(x) attr(x, "dim.", exact = TRUE)
       if (n == 0) {
         length(x) <- p
       } else {
-        stopf("Cannot set dimension to c(%s) because its length do not match the length of the object: %d != %s", paste(value, collapse = ", "), p, n)
+        stopf("Cannot set dimension to c(%s) because its length does not match the length of the object: %s != %d", paste(value, collapse = ", "), p, n)
       }
     }
     names(value) <- names

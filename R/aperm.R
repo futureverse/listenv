@@ -9,7 +9,7 @@
 #' @return Returns a list environment with permuted dimensions
 #'
 #' @seealso
-#' These functions works like [base::aperm()] and [base::t()].
+#' These functions work like [base::aperm()] and [base::t()].
 #'
 #' @examples
 #' x <- as.listenv(1:6)

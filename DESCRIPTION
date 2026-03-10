@@ -1,5 +1,5 @@
 Package: listenv
-Version: 0.10.0
+Version: 0.10.1
 Depends:
     R (>= 3.1.2)
 Suggests:
@@ -18,3 +18,5 @@ URL: https://listenv.futureverse.org, https://github.com/futureverse/listenv
 BugReports: https://github.com/futureverse/listenv/issues
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
+Language: en-US

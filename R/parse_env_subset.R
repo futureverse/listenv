@@ -132,7 +132,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
             sQuote(code), call. = FALSE)
     }
     if (length(subset) == 0L) {
-      stopf("Subsetting of at least on element is required: %s",
+      stopf("Subsetting of at least one element is required: %s",
             sQuote(code), call. = FALSE)
     }
 
@@ -173,7 +173,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
         }
         dimnames <- dimnames(envir)
 
-        ## Expland NULL indices and map names to indices
+        ## Expand NULL indices and map names to indices
         for (kk in seq_along(subset)) {
           subset_kk <- subset[[kk]]
           if (is.null(subset_kk)) {
@@ -181,7 +181,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           } else if (is.character(subset_kk)) {
             subset_kk <- match(subset_kk, dimnames[[kk]])
 	    if (anyNA(subset_kk)) {
-              unknown <- name[is.na(subset_kk)]
+              unknown <- subset[[kk]][is.na(subset_kk)]
               stopf("Unknown names for dimension #%d: %s",
 	            kk, hpaste(sQuote(unknown)))
 	    }
@@ -220,20 +220,6 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
 
         res$idx <- idx
         res$name <- names[res$idx]
-
-        ## Check if elements exist
-        exists <- rep(TRUE, times = length(idx))
-        for (kk in seq_along(subset)) {
-          subset_kk <- subset[[kk]]
-          if (is.numeric(subset_kk)) {
-            exists <- exists & (subset_kk >= 1 & subset_kk <= dim[kk])
-          } else {
-	    stopf("INTERNAL ERROR: Subset for dimension #%d should already be an index: ", kk, mode(subset_kk))
-          }
-        }
-        stop_if_not(length(exists) == length(idx))
-        exists[exists] <- !is.na(map[idx])
-        res$exists <- exists
       } else {
         subset <- subset[[1L]]
         if (is.numeric(subset)) {
@@ -255,14 +241,11 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
             i <- i[keep]
           }
           res$idx <- i
-          res$exists <- !is.na(map[res$idx]) & (res$idx >= 1 & res$idx <= n)
           res$name <- names[i]
         } else if (is.character(subset)) {
           res$idx <- match(subset, names)
-          res$exists <- !is.na(res$idx) & !is.na(map[res$idx])
         } else if (is.null(subset)) {
 	  res$idx <- seq_len(length(envir))
-          res$exists <- !is.na(res$idx) & !is.na(map[res$idx])
 	}
       }
     } else {
@@ -290,7 +273,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
   ## Identify index?
   if (inherits(res$envir, "listenv")) {
     envir <- res$envir
-    if (any(is.na(res$idx)) && nzchar(res$name)) {
+    if (length(res$name) == 1L && any(is.na(res$idx)) && nzchar(res$name)) {
       res$idx <- match(res$name, names(envir))
     }
     res$exists <- !is.na(res$idx) & !is.na(mapping(envir)[res$idx])
