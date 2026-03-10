@@ -18,6 +18,9 @@
  * `as.list(x, all.names = FALSE)` on an unnamed listenv `x` would
    return an empty list instead of all elements.
 
+ * `x[, i] <- NULL` on a listenv matrix `x` with partial dimnames
+   (some dimensions named, others not) would produce an error.
+
 
 # Version 0.10.0 [2025-11-01]
 

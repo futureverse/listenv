@@ -886,7 +886,7 @@ remove_by_index <- function(x, i) {
       }
       stop_if_not(is.numeric(idxs_dd))
       dim[dd] <- dim[dd] - length(idxs_dd)
-      dimnames[[dd]] <- dimnames[[dd]][-idxs_dd]
+      dimnames[dd] <- list(dimnames[[dd]][-idxs_dd])
     }
     idxs_drop <- sort(unique(idxs_drop), decreasing = TRUE)
     for (i in idxs_drop) x <- remove_by_index(x, i = i)

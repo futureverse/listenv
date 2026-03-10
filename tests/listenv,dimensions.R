@@ -315,6 +315,25 @@ y[, , 3] <- NULL
 print(as.list(y))
 stopifnot(identical(as.list(y), x))
 
+message("- Dropping dimensions from matrix with partial dimnames")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(c("r1", "r2"), NULL)
+x[, 1] <- NULL
+stopifnot(
+  identical(dim(x), c(2L, 2L)),
+  identical(dimnames(x), list(c("r1", "r2"), NULL))
+)
+
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+dimnames(x) <- list(NULL, c("c1", "c2", "c3"))
+x[1, ] <- NULL
+stopifnot(
+  identical(dim(x), c(1L, 3L)),
+  identical(dimnames(x), list(NULL, c("c1", "c2", "c3")))
+)
+
 message("* Dropping dimensions from matrix/array by assigning NULL ... DONE")
 
 
