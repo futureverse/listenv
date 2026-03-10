@@ -576,9 +576,9 @@ to_index <- function(x, idxs) {
     }
 
     # Ignore out-of-range indices
-    j <- i[i <= nmap]
-    for (kk in seq_along(j)) {
-      value <- x[[j[kk]]]
+    valid <- which(i <= nmap)
+    for (kk in valid) {
+      value <- x[[i[kk]]]
       if (!is.null(value)) res[[kk]] <- value
     }
   }

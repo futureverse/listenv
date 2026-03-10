@@ -207,6 +207,7 @@ stopifnot(identical(names(y), c("", "", "", "b", "c")))
 
 x <- listenv()
 x[c("a", "b", "c")] <- list(1, NULL, 3)
+stopifnot(length(x) == 3)
 
 y <- x[NULL]
 print(y)
@@ -261,6 +262,14 @@ print(y)
 z <- as.list(y)
 print(z)
 stopifnot(identical(z, rep(list(a = 1), times = 6L)))
+
+y <- x[c(4, 3)]
+print(y)
+stopifnot(identical(names(y), c("", "c")))
+z <- as.list(y)
+print(z)
+stopifnot(identical(names(z), c("", "c")))
+stopifnot(identical(z, list(NULL, c = 3)))
 
 y <- x[1:10]
 print(y)
