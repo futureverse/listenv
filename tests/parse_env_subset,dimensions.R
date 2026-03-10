@@ -100,6 +100,35 @@ stopifnot(identical(target$envir, x), length(target$idx) == 2,
           all(target$idx == c(3, 5)),
           all(target$exists == c(TRUE, FALSE)))
 
+## Multi-dimensional subsetting with out-of-bounds and named elements
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+names(x) <- letters[1:6]
+
+target <- parse_env_subset(x[1:2, c(1, 5)], substitute = TRUE)
+str(target)
+stopifnot(
+  identical(target$envir, x),
+  is.matrix(target$idx),
+  identical(dim(target$idx), c(2L, 2L)),
+  all(target$idx[, 1] == c(1, 2)),
+  all(is.na(target$idx[, 2])),
+  is.matrix(target$exists),
+  identical(dim(target$exists), c(2L, 2L)),
+  all(target$exists[, 1]),
+  !any(target$exists[, 2])
+)
+
+target <- parse_env_subset(x[1, 5], substitute = TRUE)
+str(target)
+stopifnot(
+  identical(target$envir, x),
+  length(target$idx) == 1L,
+  is.na(target$idx),
+  length(target$exists) == 1L,
+  !target$exists
+)
+
 message("*** parse_env_subset() on multi-dim listenv ... DONE")
 
 

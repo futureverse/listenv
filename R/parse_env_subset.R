@@ -273,7 +273,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
   ## Identify index?
   if (inherits(res$envir, "listenv")) {
     envir <- res$envir
-    if (any(is.na(res$idx)) && nzchar(res$name)) {
+    if (length(res$name) == 1L && any(is.na(res$idx)) && nzchar(res$name)) {
       res$idx <- match(res$name, names(envir))
     }
     res$exists <- !is.na(res$idx) & !is.na(mapping(envir)[res$idx])

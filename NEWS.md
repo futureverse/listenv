@@ -8,6 +8,9 @@
  * `get_variable(x, c(i, j, k, ...))` would return the wrong value for
    list environments with three or more dimensions.
 
+ * `parse_env_subset(x[i, j])` would produce an error when the
+   listenv `x` had named elements and a subscript was out of bounds.
+
 
 # Version 0.10.0 [2025-11-01]
 
