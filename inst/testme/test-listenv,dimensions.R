@@ -415,6 +415,49 @@ print(x)
 stopifnot(is.null(dim(x)))
 stopifnot(!is.null(names(x)), identical(names(x), c("a", "b", "d", "e", "f")))
 
+message("* dim_na() exceptions ...")
+x <- as.listenv(1:6)
+res <- try(dim_na(x) <- c(NA, NA), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+message("* is.matrix() and is.array() ...")
+x <- as.listenv(1:6)
+stopifnot(!is.matrix(x))
+stopifnot(!is.array(x))
+
+dim(x) <- c(2, 3)
+stopifnot(is.matrix(x))
+stopifnot(is.array(x))
+
+dim(x) <- c(2, 3, 1)
+stopifnot(!is.matrix(x))
+stopifnot(is.array(x))
+
+message("* as.vector() ...")
+x <- as.listenv(1:6)
+y <- as.vector(x)
+stopifnot(is.list(y), length(y) == 6)
+y <- as.vector(x, mode = "integer")
+stopifnot(is.integer(y), length(y) == 6)
+
+message("* as.matrix() ...")
+x <- as.listenv(1:6)
+y <- as.matrix(x)
+stopifnot(is.matrix(y), nrow(y) == 6, ncol(y) == 1)
+
+dim(x) <- c(2, 3)
+y <- as.matrix(x)
+stopifnot(is.matrix(y), nrow(y) == 2, ncol(y) == 3)
+
+message("* dimnames() exceptions ...")
+x <- as.listenv(1:6)
+res <- try(dimnames(x) <- list(letters[1:6]), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+dim(x) <- c(2, 3)
+res <- try(dimnames(x) <- list(letters[1:3], letters[1:3]), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
 message("* List environment and multiple dimensions ... DONE")
 
 
