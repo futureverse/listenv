@@ -28,8 +28,8 @@ A named list with elements:
 \item{\code{envir}}{An environment (defaults to argument \code{envir})}
 \item{\code{name}}{A character vector. ...}
 \item{\code{op}}{...}
-\item{\code{subset}}{A list of \code{NULL}. ...}
-\item{\code{idx}}{An integer vector or \code{NULL}. ...}
+\item{\code{subset}}{A list of subsetting indices or \code{NULL}. ...}
+\item{\code{idx}}{An integer vector or \code{NA_integer_}. ...}
 \item{\code{exists}}{A logical vector of length \code{length(idx)} with \code{TRUE}
 and \code{FALSE} values.}
 \item{\code{code}}{The deparsed expression \code{expr} coerced to a single character

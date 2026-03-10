@@ -15,8 +15,8 @@
 #'  \item{`envir`}{An environment (defaults to argument `envir`)}
 #'  \item{`name`}{A character vector. ...}
 #'  \item{`op`}{...}
-#'  \item{`subset`}{A list of `NULL`. ...}
-#'  \item{`idx`}{An integer vector or `NULL`. ...}
+#'  \item{`subset`}{A list of subsetting indices or `NULL`. ...}
+#'  \item{`idx`}{An integer vector or `NA_integer_`. ...}
 #'  \item{`exists`}{A logical vector of length `length(idx)` with `TRUE`
 #'        and `FALSE` values.}
 #'  \item{`code`}{The deparsed expression `expr` coerced to a single character
