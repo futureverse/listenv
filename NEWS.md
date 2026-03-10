@@ -15,6 +15,9 @@
    as `list(NULL)` instead of `NULL`, causing `as.list(as.listenv(x))`
    to not be identical to `x`.
 
+ * `as.list(x, all.names = FALSE)` on an unnamed listenv `x` would
+   return an empty list instead of all elements.
+
 
 # Version 0.10.0 [2025-11-01]
 

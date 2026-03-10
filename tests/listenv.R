@@ -204,6 +204,13 @@ y <- as.list(x, all.names = FALSE, sorted = TRUE)
 str(y)
 stopifnot(identical(names(y), c("", "", "", "b", "c")))
 
+## as.list(x, all.names = FALSE) on unnamed listenv should keep all elements
+x <- as.listenv(1:3)
+y <- as.list(x, all.names = FALSE)
+stopifnot(
+  length(y) == 3L,
+  identical(y, as.list(x))
+)
 
 x <- listenv()
 x[c("a", "b", "c")] <- list(1, NULL, 3)

@@ -297,7 +297,7 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
   names <- names(x)
 
   ## Drop names starting with a period
-  if (!all.names && nvars > 0) {
+  if (!all.names && nvars > 0 && !is.null(names)) {
     keep <- !grepl("^[.]", names)
     vars <- vars[keep]
     names <- names[keep]
