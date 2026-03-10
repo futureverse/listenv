@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 0.10.1 [2026-03-10]
 
 ## Bug Fixes
 
@@ -7,10 +7,6 @@
  
  * `get_variable(x, c(i, j, k, ...))` would return the wrong value for
    list environments with three or more dimensions.
-
- * `parse_env_subset(x[i, j])` would produce an error when the list
-   environment `x` had named elements and a subscript was out of
-   bounds.
 
  * `as.listenv(x)` on a list `x` with NULL elements would store them
    as `list(NULL)` instead of `NULL`, causing `as.list(as.listenv(x))`
@@ -22,6 +18,10 @@
  * `x[, i] <- NULL` on a list environment matrix `x` with partial
    dimnames (some dimensions named, others not) would produce an
    error.
+   
+ * `parse_env_subset(x[i, j])` would produce an error when the list
+   environment `x` had named elements and a subscript was out of
+   bounds.
 
 
 # Version 0.10.0 [2025-11-01]
