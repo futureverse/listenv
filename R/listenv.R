@@ -50,8 +50,13 @@ as.listenv.list <- function(x, ...) {
   names(res) <- names <- names(x)
   for (kk in seq_len(nx)) {
     value <- x[[kk]]
-    if (is.null(value)) value <- list(NULL)
-    res[[kk]] <- value
+    if (is.null(value)) {
+      ## Cannot use res[[kk]] <- NULL because that removes the element.
+      ## Instead, assign NULL directly to the internal variable.
+      assign_by_index(res, i = kk, value = value)
+    } else {
+      res[[kk]] <- value
+    }
   }
 
   ## Set dimensions?
