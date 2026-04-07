@@ -6,6 +6,8 @@
 
 ## Version 0.10.1
 
+CRAN release: 2026-03-10
+
 ### Bug Fixes
 
 - `as.list(x[c(n, 2)])` on a list environment `x` where `n` is out of
