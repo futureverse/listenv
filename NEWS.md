@@ -1,6 +1,8 @@
-# Version (development version)
+# Version 1.0.0 (2026-06-21)
 
- * ...
+## Significant Changes
+
+ * Changed the package license to permissive Apache License (>= 2).
 
 
 # Version 0.10.1 [2026-03-10]
