@@ -1,11 +1,5 @@
 # Changelog
 
-## Version 1.0.0
-
-### Significant Changes
-
-- Changed the package license to permissive Apache License (\>= 2).
-
 ## Version 0.10.1
 
 CRAN release: 2026-03-10
