@@ -11,3 +11,4 @@
 ^vignettes/.*[.](r|R)$
 ^LICENSE\.md$
 ^Makefile$
+^CITATION\.cff$

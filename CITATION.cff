@@ -1,0 +1,29 @@
+# ------------------------------------------------
+# CITATION.cff file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# ------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "listenv" in publications use:'
+type: software
+license: Apache-2.0
+title: 'listenv: Environments Behaving (Almost) as Lists'
+doi: 10.32614/CRAN.package.listenv
+abstract: List environments are environments that have list-like properties. For instance,
+  the elements of a list environment are ordered and can be accessed and iterated
+  over using index subsetting, e.g. 'x <- listenv(a = 1, b = 2); for (i in seq_along(x))
+  x[[i]] <- x[[i]] ^ 2; y <- as.list(x)'.
+authors:
+- family-names: Bengtsson
+  given-names: Henrik
+  email: henrikb@braju.com
+  orcid: https://orcid.org/0000-0002-7579-5165
+repository: https://CRAN.R-project.org/package=listenv
+repository-code: https://github.com/futureverse/listenv
+url: https://listenv.futureverse.org
+contact:
+- family-names: Bengtsson
+  given-names: Henrik
+  email: henrikb@braju.com
+  orcid: https://orcid.org/0000-0002-7579-5165
+
