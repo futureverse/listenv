@@ -9,7 +9,5 @@
 ^revdep
 ^vignettes/.*[.](pdf|PDF)$
 ^vignettes/.*[.](r|R)$
-^CONDUCT[.]md$
-^CONTRIBUTING[.]md$
 ^LICENSE\.md$
 ^Makefile$

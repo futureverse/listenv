@@ -12,3 +12,4 @@ revdep/library/*
 .make/
 docs/
 .local/
+.osgrep
