@@ -522,6 +522,20 @@ dim(x) <- c(2, 3)
 length(x) <- 6
 stopifnot(identical(dim(x), c(2L, 3L)))
 
+message("* x[[i, j]] with more than one element is an error ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- tryCatch(x[[1:2, 1]], error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("more than one element", conditionMessage(res))
+)
+res <- tryCatch(x[[1, 0]], error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("more than one element", conditionMessage(res))
+)
+
 message("* List environment and multiple dimensions ... DONE")
 
 

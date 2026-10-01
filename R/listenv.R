@@ -463,6 +463,9 @@ to_index <- function(x, idxs) {
   ## Subsetting by multiple dimensions?
   if (nidxs > 1L) {
     i <- to_index(x, idxs)
+    if (length(i) != 1L) {
+      stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
+    }
   } else {
     i <- idxs[[1L]]
     if (is.character(i)) {
