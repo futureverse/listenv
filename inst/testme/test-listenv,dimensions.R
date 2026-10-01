@@ -498,6 +498,30 @@ dim(x) <- c(2, 3)
 x[integer(0), ] <- NULL
 stopifnot(length(x) == 6)
 
+message("* length(x) <- n drops dimensions, cf. base R ...")
+for (n in c(4, 8)) {
+  x <- as.listenv(1:6)
+  dim(x) <- c(2, 3)
+  dimnames(x) <- list(c("a", "b"), c("A", "B", "C"))
+  names(x) <- letters[1:6]
+  length(x) <- n
+  stopifnot(
+    length(x) == n,
+    is.null(dim(x)),
+    is.null(dimnames(x)),
+    identical(names(x), c(letters[1:6], rep("", times = 2))[1:n])
+  )
+  y <- as.list(x)
+  stopifnot(length(y) == n)
+  print(x)
+}
+
+message("* length(x) <- length(x) preserves dimensions ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+length(x) <- 6
+stopifnot(identical(dim(x), c(2L, 3L)))
+
 message("* List environment and multiple dimensions ... DONE")
 
 

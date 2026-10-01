@@ -1,6 +1,9 @@
 # Version (development version)
 
- * ...
+## Bug Fixes
+
+ * `length(x) <- n` on a list environment `x` with dimensions did not
+   drop the dimensions, which left `x` in an invalid state.
 
 
 # Version 1.0.0 (2026-06-21)

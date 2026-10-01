@@ -240,6 +240,13 @@ if (!exists("lengths", mode = "function")) {
   }
   mapping(x) <- map
 
+  ## Remove dimensions, cf. base R
+  if (!is.null(dim(x))) {
+    names <- names(x)
+    dim(x) <- NULL
+    names(x) <- names
+  }
+
   invisible(x)
 }
 
