@@ -352,7 +352,6 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
 #' @export
 #' @keywords internal
 `$.listenv` <- function(x, name) {
-#' @keywords internal
   map <- mapping(x)
   var <- map[name]
 
