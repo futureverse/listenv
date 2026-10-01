@@ -2,7 +2,13 @@
 
 ## Version (development version)
 
-- …
+### Bug Fixes
+
+- `length(x) <- n` on a list environment `x` with dimensions did not
+  drop the dimensions, which left `x` in an invalid state.
+
+- `x[[i, j]]` on a list environment `x` with dimensions gave an obscure
+  error when the subscripts referred to more than one element.
 
 ## Version 1.0.0
 
