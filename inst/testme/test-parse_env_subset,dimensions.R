@@ -164,6 +164,19 @@ res <- try(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
            silent = TRUE)
 ## stopifnot(inherits(res, "try-error"))
 
+## Incorrect number of subscripts
+x <- listenv()
+length(x) <- 24
+dim(x) <- c(2, 3, 4)
+for (code in c("x[[1, 2]]", "x[1, 2]", "x[1, ]", "x[[1, 2, 3, 4]]", "x[1, 2, 3, 4]")) {
+  expr <- parse(text = code)[[1]]
+  res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Incorrect number of dimensions", conditionMessage(res))
+  )
+}
+
 message("*** parse_env_subset() on multi-dim listenv - exceptions ... DONE")
 
 

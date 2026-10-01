@@ -171,6 +171,10 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
         if (is.null(dim)) {
           stopf("Multi-dimensional subsetting on list environment without dimensions: %s", sQuote(code), call. = TRUE)  #nolint
         }
+        if (length(subset) != length(dim)) {
+          stopf("Incorrect number of dimensions: %d != %d: %s",
+                length(subset), length(dim), sQuote(code), call. = TRUE)
+        }
         dimnames <- dimnames(envir)
 
         ## Expand NULL indices and map names to indices
