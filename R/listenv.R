@@ -451,6 +451,45 @@ to_index <- function(x, idxs) {
 }
 
 
+## x[i], x[i,j,...], x[], x[,j], ... -> x[idx]
+## Resolves the unevaluated subscripts 'idxs' of a `[` or `[<-` call, where
+## implicit (missing) subscripts select all elements along that dimension,
+## and maps them to linear indices
+subset_to_index <- function(x, idxs, missing, envir) {
+  nidxs <- length(idxs)
+  dim <- dim(x)
+  ndim <- length(dim)
+
+  if (any(missing)) {
+    if (nidxs == ndim) {
+      for (kk in seq_len(ndim)) {
+        if (missing[kk]) {
+          idxs[[kk]] <- seq_len(dim[kk])
+        } else {
+          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
+        }
+      }
+    } else if (nidxs == 1) {
+      if (ndim == 0) {
+        idxs <- list(seq_len(length(x)))
+      } else {
+        ## Special case: Preserve dimensions when x[]
+        idxs <- lapply(dim, FUN = function(n) seq_len(n))
+        nidxs <- length(idxs)
+      }
+    }
+  } else {
+    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
+  }
+
+  if (nidxs <= 1L) {
+    idxs[[1L]]
+  } else {
+    to_index(x, idxs)
+  }
+}
+
+
 #' @export
 `[[.listenv` <- function(x, ...) {
   map <- mapping(x)
@@ -513,35 +552,7 @@ to_index <- function(x, idxs) {
   missing <- sapply(idxs, FUN = function(x) {
     is.symbol(x) && identical("", deparse(x))
   })
-  if (any(missing)) {
-    if (nidxs == ndim) {
-      envir <- parent.frame()
-      for (kk in seq_len(ndim)) {
-        if (missing[kk]) {
-          idxs[[kk]] <- seq_len(dim[kk])
-        } else {
-          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
-        }
-      }
-    } else if (nidxs == 1) {
-      if (ndim == 0) {
-        idxs <- list(seq_len(length(x)))
-      } else {
-        # Special case: Preserve dimensions when x[]
-        idxs <- lapply(dim, FUN = function(n) seq_len(n))
-        nidxs <- length(idxs)
-     }
-    }
-  } else {
-    envir <- parent.frame()
-    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
-  }
-
-  if (nidxs <= 1L) {
-    i <- idxs[[1L]]
-  } else {
-    i <- to_index(x, idxs)
-  }
+  i <- subset_to_index(x, idxs, missing = missing, envir = parent.frame())
 
   map <- mapping(x)
   nmap <- length(map)
@@ -904,35 +915,7 @@ remove_by_index <- function(x, i) {
     return(invisible(x))
   }
   
-  if (any(missing)) {
-    if (nidxs == ndim) {
-      envir <- parent.frame()
-      for (kk in seq_len(ndim)) {
-        if (missing[kk]) {
-          idxs[[kk]] <- seq_len(dim[kk])
-        } else {
-          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
-        }
-      }
-    } else if (nidxs == 1) {
-      if (ndim == 0) {
-        idxs <- list(seq_len(length(x)))
-      } else {
-        ## Special case: Preserve dimensions when x[]
-        idxs <- lapply(dim, FUN = function(n) seq_len(n))
-        nidxs <- length(idxs)
-     }
-    }
-  } else {
-    envir <- parent.frame()
-    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
-  }
-
-  if (nidxs <= 1L) {
-    i <- idxs[[1L]]
-  } else {
-    i <- to_index(x, idxs)
-  }
+  i <- subset_to_index(x, idxs, missing = missing, envir = parent.frame())
 
   ni <- length(i)
   if (is.logical(i)) {
