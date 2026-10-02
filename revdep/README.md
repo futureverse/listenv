@@ -1,24 +1,24 @@
 # Platform
 
-|field    |value                                                       |
-|:--------|:-----------------------------------------------------------|
-|version  |R version 4.5.2 (2025-10-31)                                |
-|os       |Rocky Linux 8.10 (Green Obsidian)                           |
-|system   |x86_64, linux-gnu                                           |
-|ui       |X11                                                         |
-|language |en                                                          |
-|collate  |en_US.UTF-8                                                 |
-|ctype    |en_US.UTF-8                                                 |
-|tz       |America/Los_Angeles                                         |
-|date     |2026-03-10                                                  |
-|pandoc   |3.8.3 @ /software/c4/cbi/software/pandoc-3.8.3/bin/pandoc   |
-|quarto   |1.8.26 @ /software/c4/cbi/software/quarto-1.8.26/bin/quarto |
+|field    |value                                                                    |
+|:--------|:------------------------------------------------------------------------|
+|version  |R version 4.6.1 (2026-06-24)                                             |
+|os       |Rocky Linux 8.10 (Green Obsidian)                                        |
+|system   |x86_64, linux-gnu                                                        |
+|ui       |X11                                                                      |
+|language |(EN)                                                                     |
+|collate  |en_US.UTF-8                                                              |
+|ctype    |en_US.UTF-8                                                              |
+|tz       |America/Los_Angeles                                                      |
+|date     |2026-10-02                                                               |
+|pandoc   |3.11                                                                     |
+|quarto   |1.10.18                                                                  |
 
 # Dependencies
 
-|package |old    |new         |Δ  |
-|:-------|:------|:-----------|:--|
-|listenv |0.10.0 |0.10.0-9021 |*  |
+|package |old   |new        |Δ  |
+|:-------|:-----|:----------|:--|
+|listenv |1.0.0 |1.0.0-9014 |*  |
 
 # Revdeps
 
@@ -26,17 +26,17 @@
 
 |package           |version |error |warning |note |
 |:-----------------|:-------|:-----|:-------|:----|
+|akin              |0.3.7   |      |        |     |
 |aroma.affymetrix  |3.2.3   |      |        |     |
 |aroma.core        |3.3.2   |      |        |     |
-|furrr             |0.3.1   |      |        |     |
-|future            |1.69.0  |      |        |     |
+|future            |1.76.0  |      |        |     |
 |future.apply      |1.20.2  |      |        |     |
-|future.batchtools |0.21.0  |      |        |     |
-|future.callr      |0.10.2  |      |        |     |
-|future.mirai      |0.10.1  |      |        |     |
+|[future.batchtools](problems.md#futurebatchtools)|0.22.0  |      |        |1    |
+|future.callr      |1.0.0   |      |        |     |
+|future.mirai      |1.0.0   |      |        |     |
 |GenAI             |0.2.0   |      |        |     |
 |greed             |0.6.2   |      |        |     |
-|origami           |1.0.7   |      |        |     |
+|origami           |1.0.8   |      |        |     |
 |PCRedux           |1.2-1   |      |        |     |
-|[signeR](problems.md#signer)|2.12.0  |      |        |3    |
+|[signeR](problems.md#signer)|2.14.0  |      |        |5    |
 
