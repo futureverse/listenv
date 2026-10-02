@@ -1,5 +1,13 @@
 # Version (development version)
 
+## Significant Changes
+
+ * `parse_env_subset()` on `x[NULL]` and `x[1, NULL]` now selects zero
+   elements - it used to select all elements.
+   
+ * `parse_env_subset()` on `x[[]]`, `x[[NULL]]`, `x[[integer(0)]]` now
+   gives an error as R does for lists - it used to select all elements.
+
 ## Bug Fixes
 
  * `length(x) <- n` on a list environment `x` with dimensions did not
