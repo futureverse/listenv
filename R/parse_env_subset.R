@@ -267,8 +267,11 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
 
   unknown <- which(is.na(res$exists))
   if (length(unknown) > 0) {
+    ## Variables, e.g. 'a', may be inherited, but not elements of an
+    ## environment, e.g. x$a and x[["a"]]
+    inherits <- is.null(res$op)
     res$exists[unknown] <- sapply(unknown, FUN = function(idx) {
-      exists(res$name[idx], envir = res$envir, inherits = TRUE)
+      exists(res$name[idx], envir = res$envir, inherits = inherits)
     })
   }
 

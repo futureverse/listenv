@@ -76,6 +76,20 @@ str(target)
 stopifnot(identical(target$envir, x), target$name == "a",
           is.na(target$idx), target$exists)
 
+## Elements of an environment must not be inherited from parent
+## environments, e.g. 'c' in 'base' and 'x' in the calling environment
+target <- parse_env_subset(x$c, substitute = TRUE)
+str(target)
+stopifnot(identical(target$envir, x), target$name == "c", !target$exists)
+
+target <- parse_env_subset(x[["c"]], substitute = TRUE)
+str(target)
+stopifnot(identical(target$envir, x), target$name == "c", !target$exists)
+
+target <- parse_env_subset(x$x, substitute = TRUE)
+str(target)
+stopifnot(identical(target$envir, x), target$name == "x", !target$exists)
+
 message("parse_env_subset() on environment ... DONE")
 
 

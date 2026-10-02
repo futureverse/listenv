@@ -27,6 +27,10 @@
  * `parse_env_subset(x[names])` gave an obscure error when
    `length(names) > 1` and some names did not exist.
 
+ * `parse_env_subset() on `x$name` and `x[["name"]]` would report
+   `exists = TRUE` even if `name` did not exist in `x` but in one of
+   the parent environments.
+
 
 # Version 1.0.0 (2026-06-21)
 
