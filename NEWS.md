@@ -36,6 +36,12 @@
    `exists = TRUE` even if `name` did not exist in `x` but in one of
    the parent environments.
 
+ * `parse_env_subset()` treated a `NULL` subset as an empty one, e.g.
+   `x[NULL]` and `x[1, NULL]` selected all elements instead of none.
+   Also, `x[[]]`, `x[[NULL]]`, and `x[[integer(0)]]`, and similarly
+   for more dimensions, e.g. `x[[1, ]]`, did not give an error, as
+   done for lists and arrays.
+
 
 # Version 1.0.0 (2026-06-21)
 

@@ -104,9 +104,12 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
         } else if (is.language(subset_kk)) {
           subset_kk <- eval(subset_kk, envir = envir, enclos = baseenv())
         }
-        if (is.null(subset_kk)) {
+        if (is_empty(expr[[kk]])) {
+          ## An empty subset, e.g. x[], selects all elements
           subset[kk - 2L] <- list(NULL)
         } else {
+          ## ... whereas a NULL subset, e.g. x[NULL], selects nothing
+          if (is.null(subset_kk)) subset_kk <- integer(0L)
           subset[[kk - 2L]] <- subset_kk
         }
       }
@@ -137,9 +140,19 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
             sQuote(code), call. = FALSE)
     }
 
+    op <- res$op
+    if (is.null(op)) op <- "[["
+
     for (kk in seq_along(subset)) {
       subset_kk <- subset[[kk]]
-      if (is.null(subset_kk)) {
+      if (op == "[[" && length(subset_kk) == 0L) {
+        if (is.null(subset_kk)) {
+          stopf("Invalid subset for dimension #%d. Subset must not be missing: %s",
+                kk, sQuote(code), call. = FALSE)
+        }
+        stopf("Invalid subset for dimension #%d. Subset must not be empty: %s",
+              kk, sQuote(code), call. = FALSE)
+      } else if (is.null(subset_kk)) {
       } else if (any(is.na(subset_kk))) {
         stopf("Invalid subsetting for dimension #%d. Subset must not contain missing values: %s",
               kk, sQuote(code), call. = FALSE)
@@ -166,9 +179,6 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
       names <- names(envir)
       map <- mapping(envir)
       dim <- dim(envir)
-
-      op <- res$op
-      if (is.null(op)) op <- "[["
 
       ## Multi-dimensional subsetting?
       if (length(subset) > 1L) {

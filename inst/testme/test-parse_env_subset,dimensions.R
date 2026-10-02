@@ -213,6 +213,23 @@ res <- try(target <- parse_env_subset(x[[1, 0.5]], substitute = TRUE),
 stopifnot(inherits(res, "try-error"),
           grepl("zero", conditionMessage(attr(res, "condition"))))
 
+## An empty subset selects all elements of a dimension for [, but a
+## NULL subset selects nothing, as for arrays
+target <- parse_env_subset(x[1, ], substitute = TRUE)
+stopifnot(length(target$idx) == 3L)
+
+target <- parse_env_subset(x[1, NULL], substitute = TRUE)
+stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
+
+## ... whereas both are invalid for [[, as for arrays
+res <- try(target <- parse_env_subset(x[[1, ]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+res <- try(target <- parse_env_subset(x[[1, NULL]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
 res <- try(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
            silent = TRUE)
 stopifnot(inherits(res, "try-error"))

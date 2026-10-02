@@ -230,9 +230,9 @@ target <- parse_env_subset(x[integer(0L)], substitute = TRUE)
 stopifnot(length(target$idx) == 0)
 str(target)
 
-target <- parse_env_subset(x[[integer(0L)]], substitute = TRUE)
-stopifnot(length(target$idx) == 0)
-str(target)
+## Zero-length subsets are invalid for [[, as for lists
+res <- try(parse_env_subset(x[[integer(0L)]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
 
 target <- parse_env_subset(x[0], substitute = TRUE)
 stopifnot(length(target$idx) == 0)
@@ -298,6 +298,33 @@ res <- try(parse_env_subset(y[[0.5]], substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"),
           grepl("zero", conditionMessage(attr(res, "condition"))))
 rm(list = "y")
+
+## An empty subset selects all elements for [, but a NULL subset
+## selects nothing, as for lists
+y <- listenv(a = 1, b = 2)
+target <- parse_env_subset(y[], substitute = TRUE)
+str(target)
+stopifnot(all(target$idx == 1:2), all(target$exists))
+
+target <- parse_env_subset(y[NULL], substitute = TRUE)
+str(target)
+stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
+
+i <- NULL
+target <- parse_env_subset(y[i], substitute = TRUE)
+str(target)
+stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
+
+## ... whereas both are invalid for [[, as for lists
+res <- try(parse_env_subset(y[[]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+res <- try(parse_env_subset(y[[NULL]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+res <- try(parse_env_subset(y[[i]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+rm(list = c("y", "i"))
 
 ## Odds and ends
 #target <- parse_env_subset(x[[""]], substitute = TRUE)
