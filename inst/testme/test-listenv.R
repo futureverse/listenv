@@ -1106,6 +1106,58 @@ for (expr in exprs) {
 message("* Zero indices in [<- ... DONE")
 
 
+## Negative indices select all other elements for [<-, as for lists
+message("* Negative indices in [<- ...")
+exprs <- list(
+  quote(x[-1] <- 9),
+  quote(x[c(-1, -3)] <- 9),
+  quote(x[c(-1, -1)] <- 9),
+  quote(x[c(-1, 0)] <- 9),
+  quote(x[-4] <- 9),
+  quote(x[-1.5] <- 9),
+  quote(x[-1] <- c(8, 9)),
+  quote(x[-1] <- c(7, 8, 9)),
+  quote(x[-1] <- NULL),
+  quote(x[c(-1, -2, -3)] <- NULL),
+  quote(x[c(-1, 2)] <- 9),
+  quote(x[c(-1, NA)] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth_warning <- NULL
+  truth <- tryCatch(withCallingHandlers({
+    eval(expr)
+    x
+  }, warning = function(w) {
+    truth_warning <<- w
+    invokeRestart("muffleWarning")
+  }), error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res_warning <- NULL
+  res <- tryCatch(withCallingHandlers({
+    eval(expr)
+    as.list(x)
+  }, warning = function(w) {
+    res_warning <<- w
+    invokeRestart("muffleWarning")
+  }), error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), list(a = 1, b = 2, c = 3))
+    )
+  } else {
+    stopifnot(
+      identical(res, truth),
+      is.null(res_warning) == is.null(truth_warning)
+    )
+  }
+}
+message("* Negative indices in [<- ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

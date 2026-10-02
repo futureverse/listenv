@@ -950,6 +950,13 @@ remove_by_index <- function(x, i) {
   ## Drop zero indices, as for lists
   if (is.numeric(i)) {
     i <- i[i != 0]
+    ## Negative indices select all other elements, as for lists
+    if (any(i < 0, na.rm = TRUE)) {
+      if (any(i > 0, na.rm = TRUE) || anyNA(i)) {
+        stop("Only 0's may be mixed with negative subscripts", call. = FALSE)
+      }
+      i <- setdiff(seq_along(x), -i)
+    }
     ni <- length(i)
   }
 

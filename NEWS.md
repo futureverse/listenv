@@ -25,6 +25,10 @@
    2)] <- value` and `x[0] <- NULL`, instead of ignoring them, as done
    for lists.
 
+ * `x[i] <- value` gave an error if `i` contained negative indices,
+   e.g. `x[-1] <- value` and `x[-1] <- NULL`, instead of assigning or
+   removing all other elements, as done for lists.
+
  * Subsetting a list environment did not truncate fractional indices
    toward zero, as done for lists and arrays. For example, `x[-1.5]`
    returned all elements instead of behaving as `x[-1]`, which drops
