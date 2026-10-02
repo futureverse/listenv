@@ -50,6 +50,10 @@
    for more dimensions, e.g. `x[[1, ]]`, did not give an error, as
    done for lists and arrays.
 
+ * `parse_env_subset("1a", envir = x)` gave an error on 'Not a valid
+   variable name', although any name is a valid variable name, e.g.
+   `x <- listenv("1a" = 1)`.
+
 
 # Version 1.0.0 (2026-06-21)
 

@@ -393,13 +393,31 @@ stopifnot(inherits(res, "error"))
 res <- try(target <- parse_env_subset(x[[0]], substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
-## Invalid variable name
-res <- try(target <- parse_env_subset("_a", substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+## Any name is a valid variable name, as for assign(), including
+## non-syntactic names, e.g. listenv("1a" = 1)
+ys <- list(
+  listenv("1a" = 1, "_a" = 2, "a b" = 3),
+  as.listenv(list("1a" = 1, "_a" = 2, "a b" = 3))
+)
+for (y in ys) {
+  for (name in names(y)) {
+    target <- parse_env_subset(name, envir = y, substitute = FALSE)
+    stopifnot(identical(target$envir, y), target$name == name,
+              target$idx == match(name, names(y)), target$exists)
 
-## Don't check variable name
+    target <- parse_env_subset(as.symbol(name), envir = y, substitute = FALSE)
+    stopifnot(identical(target$envir, y), target$name == name,
+              target$idx == match(name, names(y)), target$exists)
+  }
+}
+rm(list = "ys")
+
+target <- parse_env_subset("_a", substitute = TRUE)
+stopifnot(target$name == "_a", !target$exists)
+
+## Argument 'is_variable' is ignored
 target <- parse_env_subset("_a", substitute = TRUE, is_variable = FALSE)
-stopifnot(is.list(target))
+stopifnot(target$name == "_a", !target$exists)
 
 res <- try(target <- parse_env_subset(1:10, envir = x, substitute = FALSE),
            silent = TRUE)
