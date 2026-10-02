@@ -129,6 +129,21 @@ stopifnot(
   !target$exists
 )
 
+## Symbols are evaluated for [, as for [[
+x <- listenv()
+length(x) <- 6
+dim(x) <- c(2, 3)
+x[[2, 1]] <- 2.1
+j <- 2L
+target <- parse_env_subset(x[j, 1], substitute = TRUE)
+str(target)
+stopifnot(target$idx == 2, target$exists)
+target <- parse_env_subset(x[j, ], substitute = TRUE)
+str(target)
+stopifnot(all(target$idx == c(2, 4, 6)),
+          all(target$exists == c(TRUE, FALSE, FALSE)))
+rm(list = "j")
+
 ## Named dimensions must not give dimnames on 'idx' and 'exists'
 for (dim in list(c(r = 2, c = 3), c(d1 = 2, d2 = 3, d3 = 4))) {
   x <- listenv()

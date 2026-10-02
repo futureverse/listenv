@@ -22,6 +22,9 @@
    dimensions returned elements `idx` and `exists` with dimnames that
    should not be there.
 
+ * `parse_env_subset(x[i])` would treat `x[i]` as `x["i"]`, and
+   similarly for more dimensions, e.g. `parse_env_subset(x[i, j])`.
+
 
 # Version 1.0.0 (2026-06-21)
 

@@ -93,7 +93,8 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
         }
         if (is.symbol(subset_kk)) {
           subset_kk <- deparse(subset_kk)
-          if (op == "[[") {
+          ## Symbols are names for x$name, but variables for x[[i]] and x[i]
+          if (op != "$") {
             if (!exists(subset_kk, envir = envir, inherits = TRUE)) {
               stopf("Object %s not found: %s",
                     sQuote(subset_kk), sQuote(code), call. = FALSE)

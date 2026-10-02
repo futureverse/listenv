@@ -228,6 +228,27 @@ target <- parse_env_subset(x[-1], substitute = TRUE)
 stopifnot(length(target$idx) == length(x) - 1)
 str(target)
 
+## Symbols are evaluated for [ and [[, but not for $
+y <- listenv(a = 1, b = 2)
+k <- 2L
+target <- parse_env_subset(y[k], substitute = TRUE)
+str(target)
+stopifnot(target$name == "b", target$idx == 2L, target$exists)
+
+target <- parse_env_subset(y[[k]], substitute = TRUE)
+str(target)
+stopifnot(target$name == "b", target$idx == 2L, target$exists)
+
+target <- parse_env_subset(y$k, substitute = TRUE)
+str(target)
+stopifnot(target$name == "k", is.na(target$idx), !target$exists)
+
+k <- "a"
+target <- parse_env_subset(y[k], substitute = TRUE)
+str(target)
+stopifnot(target$name == "a", target$idx == 1L, target$exists)
+rm(list = c("y", "k"))
+
 ## Odds and ends
 #target <- parse_env_subset(x[[""]], substitute = TRUE)
 #str(target)
@@ -385,6 +406,11 @@ stopifnot(inherits(res, "try-error"))
 ## Operator '$' with more than two arguments
 expr <- call("$", quote(x), quote(a), quote(b))
 res <- try(parse_env_subset(expr, substitute = FALSE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Non-existing symbol used as subscript
+x <- listenv(a = 1)
+res <- try(parse_env_subset(x[non_existing_symbol], substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
 message("*** parse_env_subset() - exceptions ... DONE")
