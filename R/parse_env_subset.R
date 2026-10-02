@@ -183,11 +183,11 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
       ## Multi-dimensional subsetting?
       if (length(subset) > 1L) {
         if (is.null(dim)) {
-          stopf("Multi-dimensional subsetting on list environment without dimensions: %s", sQuote(code), call. = TRUE)  #nolint
+          stopf("Multi-dimensional subsetting on list environment without dimensions: %s", sQuote(code), call. = FALSE)  #nolint
         }
         if (length(subset) != length(dim)) {
           stopf("Incorrect number of subscripts (%d) for a list environment with %d dimensions: %s",  #nolint
-                length(subset), length(dim), sQuote(code), call. = TRUE)
+                length(subset), length(dim), sQuote(code), call. = FALSE)
         }
         ## Expand NULL indices, and validate [[ indices
         for (kk in seq_along(subset)) {
@@ -196,11 +196,11 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
             subset[[kk]] <- seq_len(dim[kk])
           } else if (op == "[[" && is.numeric(subset_kk)) {
             if (any(subset_kk == 0)) {
-              stopf("Invalid (zero) indices for dimension #%d: %s",
-                    kk, hpaste(subset_kk))
+              stopf("Invalid (zero) indices for dimension #%d (%s): %s",
+                    kk, hpaste(subset_kk), sQuote(code), call. = FALSE)
             } else if (any(subset_kk < 0)) {
-              stopf("Invalid (negative) indices for dimension #%d: %s",
-                    kk, hpaste(subset_kk))
+              stopf("Invalid (negative) indices for dimension #%d (%s): %s",
+                    kk, hpaste(subset_kk), sQuote(code), call. = FALSE)
             }
           }
         }
@@ -219,9 +219,11 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           n <- length(envir)
           if (any(i < 0)) {
             if (op == "[[") {
-              stopf("Invalid (negative) indices: %s", hpaste(i))
+              stopf("Invalid (negative) indices (%s): %s",
+                    hpaste(i), sQuote(code), call. = FALSE)
             } else if (any(i > 0)) {
-              stop("Only 0's may be mixed with negative subscripts")
+              stopf("Only 0's may be mixed with negative subscripts: %s",
+                    sQuote(code), call. = FALSE)
             }
             ## Drop elements
             i <- setdiff(seq_len(n), -i)
@@ -229,7 +231,10 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           ## Drop zeros?
           keep <- which(i != 0)
           if (length(keep) != length(i)) {
-            if (op == "[[") stopf("Invalid (zero) indices: %s", hpaste(i))
+            if (op == "[[") {
+              stopf("Invalid (zero) indices (%s): %s",
+                    hpaste(i), sQuote(code), call. = FALSE)
+            }
             i <- i[keep]
           }
           res$idx <- i
@@ -242,16 +247,16 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
       }
     } else {
       if (length(subset) > 1L) {
-        stopf("Invalid subset: %s", sQuote(code), call. = TRUE)
+        stopf("Invalid subset: %s", sQuote(code), call. = FALSE)
       }
       subset <- subset[[1L]]
       if (length(subset) > 1L) {
         stopf("Wrong arguments for subsetting an environment: %s",
-	      sQuote(code), call. = TRUE)
+	      sQuote(code), call. = FALSE)
       }
       if (!is.character(subset)) {
         stopf("Wrong arguments for subsetting an environment: %s",
-	      sQuote(code), call. = TRUE)
+	      sQuote(code), call. = FALSE)
       }
     }
     
@@ -274,7 +279,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
   ## Validate
   if (is.null(dim) && length(res$subset) == 1 && identical(res$op, "[")) {
     if (any(is.na(res$idx) & !nzchar(res$name))) {
-      stopf("Invalid subset: %s", sQuote(code), call. = TRUE)
+      stopf("Invalid subset: %s", sQuote(code), call. = FALSE)
     }
   }
 

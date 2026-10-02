@@ -250,6 +250,29 @@ for (code in names(codes)) {
   )
 }
 
+## All errors report the code, but not the call
+x <- listenv()
+length(x) <- 6
+dim(x) <- c(2, 3)
+y <- listenv()
+length(y) <- 3
+e <- new.env()
+codes <- c(
+  "x[[1, 0]]", "x[[1, -1]]",
+  "y[[1, 2]]", "y[[0]]", "y[[-1]]", "y[c(-1, 1)]",
+  "e[[\"a\", \"b\"]]", "e[[c(\"a\", \"b\")]]", "e[[1]]"
+)
+for (code in codes) {
+  expr <- parse(text = code)[[1]]
+  res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl(sQuote(code), conditionMessage(res), fixed = TRUE),
+    is.null(conditionCall(res))
+  )
+}
+rm(list = c("x", "y", "e"))
+
 message("*** parse_env_subset() on multi-dim listenv - exceptions ... DONE")
 
 
