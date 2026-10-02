@@ -18,6 +18,12 @@
 
  * `x[[name]]` where `length(name) != 1` gave an obscure error.
 
+ * Subsetting a list environment did not truncate fractional indices
+   toward zero, as done for lists and arrays. For example, `x[-1.5]`
+   returned all elements instead of behaving as `x[-1]`, which drops
+   the first element. Similarly, `x[1.5, 2.9]` behaved as `x[1, 3]`
+   instead of `x[1, 2]`.
+
  * `parse_env_subset()` on `x[[i, j]]` with dimensions did not give an
    error for zero indices, e.g.  `x[[1, 0]]`, but returned an empty
    target, although it gave an error for `x[[0]]`.

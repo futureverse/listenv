@@ -554,6 +554,37 @@ for (expr in list(quote(x[[1, 2, 3]]), quote(x[[1, 2, 3]] <- 0))) {
   )
 }
 
+## Fractional indices are truncated toward zero, as for arrays
+exprs <- list(
+  quote(x[[1.5, 2]]),
+  quote(x[[1, 0.5]]),
+  quote(x[1.5, 2.9]),
+  quote(x[-1.5, 1]),
+  quote(x[[1.5, 2]] <- 9),
+  quote(x[1.5, 2.9] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- identical(expr[[1]], as.symbol("<-"))
+  x <- array(as.list(1:6), dim = c(2, 3))
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(1:6)
+  dim(x) <- c(2, 3)
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(inherits(res, "error"))
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    stopifnot(identical(unlist(res), unlist(truth)))
+  }
+}
+
 message("* List environment and multiple dimensions ... DONE")
 
 

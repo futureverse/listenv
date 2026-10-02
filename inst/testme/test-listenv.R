@@ -1010,6 +1010,42 @@ for (name in list(character(0L), c("a", "b"), c("a", "c"))) {
 }
 
 
+## Fractional indices are truncated toward zero, as for lists
+message("* Fractional indices ...")
+exprs <- list(
+  quote(x[[1.5]]),
+  quote(x[[3.9]]),
+  quote(x[[0.5]]),
+  quote(x[c(0.5, 2.9)]),
+  quote(x[-1.5]),
+  quote(x[c(-0.5, -1.5)]),
+  quote(x[[1.5]] <- 9),
+  quote(x[[0.5]] <- 9),
+  quote(x[c(1.5, 3.9)] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- identical(expr[[1]], as.symbol("<-"))
+  x <- list(a = 1, b = 2, c = 3)
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(inherits(res, "error"))
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    stopifnot(identical(res, truth))
+  }
+}
+message("* Fractional indices ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

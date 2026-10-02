@@ -238,12 +238,17 @@ stopifnot(inherits(res, "try-error"))
 x <- listenv()
 length(x) <- 24
 dim(x) <- c(2, 3, 4)
-codes <- c("x[[1, 2]]" = 2, "x[1, 2]" = 2, "x[1, ]" = 2,
-           "x[[1, 2, 3, 4]]" = 4, "x[1, 2, 3, 4]" = 4)
-for (code in names(codes)) {
-  expr <- parse(text = code)[[1]]
+exprs <- list(
+  quote(x[[1, 2]]),
+  quote(x[1, 2]),
+  quote(x[1, ]),
+  quote(x[[1, 2, 3, 4]]),
+  quote(x[1, 2, 3, 4])
+)
+for (expr in exprs) {
+  nsubscripts <- length(expr) - 2L
   res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
-  msg <- sprintf("Incorrect number of subscripts (%d) for a list environment with 3 dimensions", codes[[code]])
+  msg <- sprintf("Incorrect number of subscripts (%d) for a list environment with 3 dimensions", nsubscripts)
   stopifnot(
     inherits(res, "error"),
     grepl(msg, conditionMessage(res), fixed = TRUE)
@@ -257,13 +262,19 @@ dim(x) <- c(2, 3)
 y <- listenv()
 length(y) <- 3
 e <- new.env()
-codes <- c(
-  "x[[1, 0]]", "x[[1, -1]]",
-  "y[[1, 2]]", "y[[0]]", "y[[-1]]", "y[c(-1, 1)]",
-  "e[[\"a\", \"b\"]]", "e[[c(\"a\", \"b\")]]", "e[[1]]"
+exprs <- list(
+  quote(x[[1, 0]]),
+  quote(x[[1, -1]]),
+  quote(y[[1, 2]]),
+  quote(y[[0]]),
+  quote(y[[-1]]),
+  quote(y[c(-1, 1)]),
+  quote(e[["a", "b"]]),
+  quote(e[[c("a", "b")]]),
+  quote(e[[1]])
 )
-for (code in codes) {
-  expr <- parse(text = code)[[1]]
+for (expr in exprs) {
+  code <- paste(deparse(expr), collapse = "")
   res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
   stopifnot(
     inherits(res, "error"),

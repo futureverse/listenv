@@ -510,8 +510,18 @@ stopifnot(inherits(res, "try-error"))
 
 ## Expressions that do not specify a target give an informative error
 a <- 1
-for (code in c("f()", "TRUE", "NULL", "NA", "f(a)", "-a", "(a)", "!a")) {
-  expr <- parse(text = code)[[1]]
+exprs <- list(
+  quote(f()),
+  quote(TRUE),
+  quote(NULL),
+  quote(NA),
+  quote(f(a)),
+  quote(-a),
+  quote((a)),
+  quote(!a)
+)
+for (expr in exprs) {
+  code <- paste(deparse(expr), collapse = "")
   res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
   stopifnot(
     inherits(res, "error"),

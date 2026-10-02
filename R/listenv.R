@@ -404,6 +404,8 @@ to_index <- function(x, idxs, on_out_of_bound = c("error", "NA")) {
       i <- which(i)
     } else if (is.numeric(i)) {
       d <- dim[kk]
+      ## Fractional indices are truncated toward zero, as for arrays
+      i <- trunc(i)
       if (any(i < 0)) {
         if (any(i > 0)) {
           stopf("Only 0's may be mixed with negative subscripts (dimension #%d)", kk)
@@ -488,7 +490,10 @@ subset_to_index <- function(x, idxs, missing, envir) {
   }
 
   if (nidxs <= 1L) {
-    idxs[[1L]]
+    i <- idxs[[1L]]
+    ## Fractional indices are truncated toward zero, as for lists
+    if (is.numeric(i)) i <- trunc(i)
+    i
   } else {
     to_index(x, idxs)
   }
@@ -523,10 +528,13 @@ subset_to_index <- function(x, idxs, missing, envir) {
       name <- i
       i <- match(name, table = names(map))
       if (is.na(i)) return(NULL)
+    } else if (is.numeric(i)) {
+      ## Fractional indices are truncated toward zero, as for lists
+      i <- trunc(i)
     }
 
     if (i < 1L || i > n) {
-      stopf("Subscript out of bounds [%d,%d]: %d",
+      stopf("Subscript out of bounds [%d,%d]: %s",
             min(1, n), n, i, call. = FALSE)
     }
   }
@@ -850,6 +858,9 @@ remove_by_index <- function(x, i) {
         x <- assign_by_name(x, name = i, value = value)
       }
       return(invisible(x))
+    } else if (is.numeric(i)) {
+      ## Fractional indices are truncated toward zero, as for lists
+      i <- trunc(i)
     }
   }
 
