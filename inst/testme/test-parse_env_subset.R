@@ -372,6 +372,21 @@ x <- new.env()
 res <- try(parse_env_subset(x[1, 2], substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
+## Numeric index with listenv 'envir'
+x <- listenv(a = 1, b = 2)
+res <- parse_env_subset(1, envir = x, substitute = TRUE)
+stopifnot(identical(res$name, "a"), res$idx == 1, res$exists)
+
+## Unsupported operator
+x <- listenv()
+res <- try(parse_env_subset(foo(x, 1), substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## Operator '$' with more than two arguments
+expr <- call("$", quote(x), quote(a), quote(b))
+res <- try(parse_env_subset(expr, substitute = FALSE), silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
 message("*** parse_env_subset() - exceptions ... DONE")
 
 

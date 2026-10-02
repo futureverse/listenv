@@ -975,6 +975,30 @@ res <- try(x[1] <- list(), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
 
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[i, j]] on listenv without dimensions
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+res <- try(x[[1, 2]], silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+res <- try(x[[1, 2]] <- 3, silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[<- NULL with invalid names or indices
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+for (name in list(character(0L), c("a", "b"), "")) {
+  res <- try(x[[name]] <- NULL, silent = TRUE)
+  stopifnot(inherits(res, "try-error"))
+}
+for (i in list(integer(0L), 1:2, NA_real_, Inf, 0, -1)) {
+  res <- try(x[[i]] <- NULL, silent = TRUE)
+  stopifnot(inherits(res, "try-error"))
+}
+stopifnot(identical(names(x), c("a", "b")), length(x) == 2L)
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

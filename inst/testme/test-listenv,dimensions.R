@@ -536,6 +536,24 @@ stopifnot(
   grepl("more than one element", conditionMessage(res))
 )
 
+message("* x[[i, j]] with incorrect number of subscripts is an error ...")
+x <- as.listenv(1:6)
+for (expr in list(quote(x[[1, 2]]), quote(x[[1, 2]] <- 0))) {
+  res <- tryCatch(eval(expr), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Incorrect number of subscripts (2) for a list environment with 0 dimensions", conditionMessage(res), fixed = TRUE)
+  )
+}
+dim(x) <- c(2, 3)
+for (expr in list(quote(x[[1, 2, 3]]), quote(x[[1, 2, 3]] <- 0))) {
+  res <- tryCatch(eval(expr), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Incorrect number of subscripts (3) for a list environment with 2 dimensions", conditionMessage(res), fixed = TRUE)
+  )
+}
+
 message("* List environment and multiple dimensions ... DONE")
 
 

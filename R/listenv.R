@@ -367,10 +367,9 @@ to_index <- function(x, idxs) {
   nidxs <- length(idxs)
 
   dim <- dim(x)
-  if (is.null(dim)) dim <- length(x)
   ndim <- length(dim)
   if (nidxs != ndim) {
-    stopf("Incorrect number of dimensions: %d != %d", nidxs, ndim)
+    stopf("Incorrect number of subscripts (%d) for a list environment with %d dimensions", nidxs, ndim)  #nolint
   }
   dimnames <- dimnames(x)
   idx_dimnames <- dimnames
