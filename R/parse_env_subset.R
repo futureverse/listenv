@@ -173,7 +173,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           stopf("Multi-dimensional subsetting on list environment without dimensions: %s", sQuote(code), call. = TRUE)  #nolint
         }
         if (length(subset) != length(dim)) {
-          stopf("Incorrect number of dimensions: %d != %d: %s",
+          stopf("Incorrect number of subscripts (%d) for a list environment with %d dimensions: %s",  #nolint
                 length(subset), length(dim), sQuote(code), call. = TRUE)
         }
         dimnames <- dimnames(envir)

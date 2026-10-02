@@ -212,12 +212,15 @@ stopifnot(inherits(res, "try-error"))
 x <- listenv()
 length(x) <- 24
 dim(x) <- c(2, 3, 4)
-for (code in c("x[[1, 2]]", "x[1, 2]", "x[1, ]", "x[[1, 2, 3, 4]]", "x[1, 2, 3, 4]")) {
+codes <- c("x[[1, 2]]" = 2, "x[1, 2]" = 2, "x[1, ]" = 2,
+           "x[[1, 2, 3, 4]]" = 4, "x[1, 2, 3, 4]" = 4)
+for (code in names(codes)) {
   expr <- parse(text = code)[[1]]
   res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
+  msg <- sprintf("Incorrect number of subscripts (%d) for a list environment with 3 dimensions", codes[[code]])
   stopifnot(
     inherits(res, "error"),
-    grepl("Incorrect number of dimensions", conditionMessage(res))
+    grepl(msg, conditionMessage(res), fixed = TRUE)
   )
 }
 
