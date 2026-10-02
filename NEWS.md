@@ -18,6 +18,10 @@
    `x[[1, 0]]`, but returned an empty target, although it gave an
    error for `x[[0]]`.
 
+ * `parse_env_subset(x[[i, j]])` on a list environment `x` with named
+   dimensions returned elements `idx` and `exists` with dimnames that
+   should not be there.
+
 
 # Version 1.0.0 (2026-06-21)
 

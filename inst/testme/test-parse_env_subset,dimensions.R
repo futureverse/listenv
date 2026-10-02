@@ -129,6 +129,29 @@ stopifnot(
   !target$exists
 )
 
+## Named dimensions must not give dimnames on 'idx' and 'exists'
+for (dim in list(c(r = 2, c = 3), c(d1 = 2, d2 = 3, d3 = 4))) {
+  x <- listenv()
+  length(x) <- prod(dim)
+  dim(x) <- dim
+  if (length(dim) == 2) {
+    exprs <- list(quote(x[[1, 2]]), quote(x[, 2]), quote(x[1, 4]))
+    idxs <- list(3, c(3, 4), NA)
+  } else {
+    exprs <- list(quote(x[[1, 2, 3]]), quote(x[, 2, 4]), quote(x[-1, 1:2, 4]))
+    idxs <- list(15, c(21, 22), c(20, 22))
+  }
+  for (kk in seq_along(exprs)) {
+    target <- parse_env_subset(exprs[[kk]], substitute = FALSE)
+    str(target)
+    stopifnot(
+      is.null(dimnames(target$idx)),
+      is.null(dimnames(target$exists)),
+      identical(as.vector(target$idx), as.numeric(idxs[[kk]]))
+    )
+  }
+}
+
 message("*** parse_env_subset() on multi-dim listenv ... DONE")
 
 

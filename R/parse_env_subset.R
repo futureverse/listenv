@@ -195,7 +195,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
 
         ## Indexing scale factor per dimension
         ndim <- length(dim)
-        scale <- c(1L, cumprod(dim[-ndim]))
+        scale <- c(1L, cumprod(unname(dim[-ndim])))
         idx <- 1
         for (kk in seq_along(subset)) {
           i <- subset[[kk]]
