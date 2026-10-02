@@ -1056,6 +1056,46 @@ for (i in list(NA, NA_integer_, NA_real_, NaN, NA_character_)) {
 message("* Missing [[ index ... DONE")
 
 
+## Zero indices are dropped for [<-, as for lists
+message("* Zero indices in [<- ...")
+exprs <- list(
+  quote(x[0] <- 9),
+  quote(x[c(0, 2)] <- 9),
+  quote(x[c(2, 0)] <- 9),
+  quote(x[c(0, 0)] <- 9),
+  quote(x[c(0, 2)] <- c(8, 9)),
+  quote(x[c(0.5, 2)] <- 9),
+  quote(x[c(0, 2)] <- NULL),
+  quote(x[0] <- NULL)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth_warning <- NULL
+  withCallingHandlers({
+    eval(expr)
+  }, warning = function(w) {
+    truth_warning <<- w
+    invokeRestart("muffleWarning")
+  })
+  truth <- x
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res_warning <- NULL
+  withCallingHandlers({
+    eval(expr)
+  }, warning = function(w) {
+    res_warning <<- w
+    invokeRestart("muffleWarning")
+  })
+  res <- as.list(x)
+  stopifnot(
+    identical(res, truth),
+    is.null(res_warning) == is.null(truth_warning)
+  )
+}
+message("* Zero indices in [<- ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

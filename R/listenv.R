@@ -947,6 +947,11 @@ remove_by_index <- function(x, i) {
     ni <- length(i)
   }
 
+  ## Drop zero indices, as for lists
+  if (is.numeric(i)) {
+    i <- i[i != 0]
+    ni <- length(i)
+  }
 
   # Nothing to do?
   if (ni == 0L) return(invisible(x))
