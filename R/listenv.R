@@ -516,6 +516,10 @@ subset_to_index <- function(x, idxs, missing, envir) {
     }
   } else {
     i <- idxs[[1L]]
+
+    ## A missing index, e.g. x[[NA]], gives NULL, as for lists
+    if (is.atomic(i) && length(i) == 1L && is.na(i)) return(NULL)
+
     if (!is.character(i) && !is.numeric(i)) {
       return(NextMethod())
     }

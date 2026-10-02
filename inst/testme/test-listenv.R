@@ -1046,6 +1046,16 @@ for (expr in exprs) {
 message("* Fractional indices ... DONE")
 
 
+## A missing index gives NULL for [[, as for lists
+message("* Missing [[ index ...")
+x <- as.listenv(list(a = 1, b = 2, c = 3))
+for (i in list(NA, NA_integer_, NA_real_, NaN, NA_character_)) {
+  message(sprintf("- x[[%s]]", deparse(i)))
+  stopifnot(is.null(x[[i]]))
+}
+message("* Missing [[ index ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

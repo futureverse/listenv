@@ -7,16 +7,19 @@
    
  * `parse_env_subset()` on `x[[]]`, `x[[NULL]]`, `x[[integer(0)]]` now
    gives an error as R does for lists - it used to select all elements.
-
+   
 ## Bug Fixes
 
- * `length(x) <- n` on a list environment `x` with dimensions did not
-   drop the dimensions, which left `x` in an invalid state.
+ * `length(x) <- n` on a list environment with dimensions did not drop
+   the dimensions, which left `x` in an invalid state.
 
- * `x[[i, j]]` on a list environment `x` with dimensions gave an
-   obscure error when the subscripts referred to more than one element.
+ * `x[[i, j]]` on a list environment with dimensions gave an obscure
+   error when the subscripts referred to more than one element.
 
  * `x[[name]]` where `length(name) != 1` gave an obscure error.
+
+ * `x[[NA]]`, `x[[NA_integer_]]` and `x[[NA_real_]]` gave an obscure
+   error instead of returning `NULL`, as done for lists.
 
  * Subsetting a list environment did not truncate fractional indices
    toward zero, as done for lists and arrays. For example, `x[-1.5]`
