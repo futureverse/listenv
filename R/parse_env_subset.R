@@ -51,7 +51,10 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
     res$subset <- list(expr)
   } else {
     n <- length(expr)
-    stop_if_not(n >= 2L)
+    ## Only x$name, x[[...]], and x[...] can specify a target
+    if (!is.call(expr) || n < 3L) {
+      stopf("Invalid syntax: %s", sQuote(code), call. = FALSE)
+    }
 
     if (n >= 3L) {
       ## Assignment to environment via $ and [[

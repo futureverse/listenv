@@ -508,6 +508,20 @@ x <- listenv(a = 1)
 res <- try(parse_env_subset(x[non_existing_symbol], substitute = TRUE), silent = TRUE)
 stopifnot(inherits(res, "try-error"))
 
+## Expressions that do not specify a target give an informative error
+a <- 1
+for (code in c("f()", "TRUE", "NULL", "NA", "f(a)", "-a", "(a)", "!a")) {
+  expr <- parse(text = code)[[1]]
+  res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Invalid syntax", conditionMessage(res), fixed = TRUE),
+    grepl(sQuote(code), conditionMessage(res), fixed = TRUE),
+    is.null(conditionCall(res))
+  )
+}
+rm(list = "a")
+
 message("*** parse_env_subset() - exceptions ... DONE")
 
 
