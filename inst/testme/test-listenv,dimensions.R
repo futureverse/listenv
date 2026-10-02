@@ -557,12 +557,17 @@ for (expr in list(quote(x[[1, 2, 3]]), quote(x[[1, 2, 3]] <- 0))) {
 ## Fractional indices are truncated toward zero, as for arrays
 exprs <- list(
   quote(x[[1.5, 2]]),
-  quote(x[[1, 0.5]]),
   quote(x[1.5, 2.9]),
   quote(x[-1.5, 1]),
   quote(x[[1.5, 2]] <- 9),
   quote(x[1.5, 2.9] <- 9)
 )
+## For arrays, x[[1, 0.5]] gives x[[1, 1]] in R (< 4.2.0)
+if (getRversion() >= "4.2.0") {
+  exprs <- c(exprs, list(
+    quote(x[[1, 0.5]])
+  ))
+}
 for (expr in exprs) {
   message(sprintf("- %s", paste(deparse(expr), collapse = "")))
   is_assign <- identical(expr[[1]], as.symbol("<-"))
@@ -584,6 +589,13 @@ for (expr in exprs) {
     stopifnot(identical(unlist(res), unlist(truth)))
   }
 }
+
+## x[[1, 0.5]] is an error, because it is x[[1, 0]], regardless of R
+## version
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- tryCatch(x[[1, 0.5]], error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* List environment and multiple dimensions ... DONE")
 

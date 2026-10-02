@@ -1015,7 +1015,6 @@ message("* Fractional indices ...")
 exprs <- list(
   quote(x[[1.5]]),
   quote(x[[3.9]]),
-  quote(x[[0.5]]),
   quote(x[c(0.5, 2.9)]),
   quote(x[-1.5]),
   quote(x[c(-0.5, -1.5)]),
@@ -1023,6 +1022,12 @@ exprs <- list(
   quote(x[[0.5]] <- 9),
   quote(x[c(1.5, 3.9)] <- 9)
 )
+## For lists, x[[0.5]] gives x[[1]] in R (< 4.2.0)
+if (getRversion() >= "4.2.0") {
+  exprs <- c(exprs, list(
+    quote(x[[0.5]])
+  ))
+}
 for (expr in exprs) {
   message(sprintf("- %s", paste(deparse(expr), collapse = "")))
   is_assign <- identical(expr[[1]], as.symbol("<-"))
@@ -1043,6 +1048,11 @@ for (expr in exprs) {
     stopifnot(identical(res, truth))
   }
 }
+
+## x[[0.5]] is an error, because it is x[[0]], regardless of R version
+x <- as.listenv(list(a = 1, b = 2, c = 3))
+res <- tryCatch(x[[0.5]], error = identity)
+stopifnot(inherits(res, "error"))
 message("* Fractional indices ... DONE")
 
 
