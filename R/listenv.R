@@ -363,7 +363,10 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
 
 
 ## [[i,j,...]] -> [[idx]]
-to_index <- function(x, idxs) {
+## If 'on_out_of_bound' is "NA", then out-of-bounds indices map to
+## NA_integer_, otherwise they produce an error
+to_index <- function(x, idxs, on_out_of_bound = c("error", "NA")) {
+  on_out_of_bound <- match.arg(on_out_of_bound)
   nidxs <- length(idxs)
 
   dim <- dim(x)
@@ -401,16 +404,19 @@ to_index <- function(x, idxs) {
       i <- which(i)
     } else if (is.numeric(i)) {
       d <- dim[kk]
-      if (any(i > d)) {
-        stopf("Subscript for dimension #%d out of bounds [%d,%d]",
-	      kk, min(1, d), d)
-      }
       if (any(i < 0)) {
         if (any(i > 0)) {
           stopf("Only 0's may be mixed with negative subscripts (dimension #%d)", kk)
         }
         ## Drop elements
         i <- setdiff(seq_len(d), -i)
+      }
+      if (any(i > d)) {
+        if (on_out_of_bound == "error") {
+          stopf("Subscript for dimension #%d out of bounds [%d,%d]",
+	        kk, min(1, d), d)
+        }
+        i[i > d] <- NA_integer_
       }
       ## Drop zeros
       i <- i[i != 0]

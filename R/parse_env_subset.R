@@ -176,56 +176,26 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           stopf("Incorrect number of subscripts (%d) for a list environment with %d dimensions: %s",  #nolint
                 length(subset), length(dim), sQuote(code), call. = TRUE)
         }
-        dimnames <- dimnames(envir)
-
-        ## Expand NULL indices and map names to indices
+        ## Expand NULL indices, and validate [[ indices
         for (kk in seq_along(subset)) {
           subset_kk <- subset[[kk]]
           if (is.null(subset_kk)) {
             subset[[kk]] <- seq_len(dim[kk])
-          } else if (is.character(subset_kk)) {
-            subset_kk <- match(subset_kk, dimnames[[kk]])
-	    if (anyNA(subset_kk)) {
-              unknown <- subset[[kk]][is.na(subset_kk)]
-              stopf("Unknown names for dimension #%d: %s",
-	            kk, hpaste(sQuote(unknown)))
-	    }
-            subset[[kk]] <- subset_kk
+          } else if (op == "[[" && is.numeric(subset_kk)) {
+            if (any(subset_kk == 0)) {
+              stopf("Invalid (zero) indices for dimension #%d: %s",
+                    kk, hpaste(subset_kk))
+            } else if (any(subset_kk < 0)) {
+              stopf("Invalid (negative) indices for dimension #%d: %s",
+                    kk, hpaste(subset_kk))
+            }
           }
         }
 
-        ## Indexing scale factor per dimension
-        ndim <- length(dim)
-        scale <- c(1L, cumprod(unname(dim[-ndim])))
-        idx <- 1
-        for (kk in seq_along(subset)) {
-          i <- subset[[kk]]
-          stop_if_not(is.numeric(i))
-          d <- dim[kk]
-          if (op == "[[" && any(i == 0)) {
-            stopf("Invalid (zero) indices for dimension #%d: %s",
-                  kk, hpaste(i))
-          }
-          if (any(i < 0)) {
-            if (op == "[[") {
-              stopf("Invalid (negative) indices for dimension #%d: %s",
-	            kk, hpaste(i))
-            } else if (any(i > 0)) {
-              stopf("Only 0's may be mixed with negative subscripts (dimension #%d)", kk)
-            }
-            ## Drop elements
-            i <- setdiff(seq_len(d), -i)
-          }
-          if (any(i > d)) i[i > d] <- NA_integer_
-          ## Drop zeros
-          i <- i[i != 0]
-          i <- scale[kk] * (i - 1)
-          if (kk == 1) {
-            idx <- idx + i
-          } else {
-            idx <- outer(idx, i, FUN = `+`)
-          }
-        } # for (kk ...)
+        ## Map to linear indices, where out-of-bounds indices become NA
+        idx <- to_index(envir, subset, on_out_of_bound = "NA")
+        dimnames(idx) <- NULL
+        names(dim(idx)) <- NULL
 
         res$idx <- idx
         res$name <- names[res$idx]
