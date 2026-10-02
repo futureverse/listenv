@@ -150,19 +150,25 @@ length(x) <- 6
 dim(x) <- c(2, 3)
 
 
-## - - - - - - - - - - - - - - - - - - - - - - - - - - -
-## FIXME: Should zero indices give parse errors or not?
-## - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Zero indices are invalid for [[, as for lists
 res <- try(target <- parse_env_subset(x[[0]], substitute = TRUE), silent = TRUE)
-## stopifnot(inherits(res, "try-error"))
+stopifnot(inherits(res, "try-error"))
 
 res <- try(target <- parse_env_subset(x[[1, 0]], substitute = TRUE),
            silent = TRUE)
-## stopifnot(inherits(res, "try-error"))
+stopifnot(inherits(res, "try-error"))
+
+res <- try(target <- parse_env_subset(x[[0, 2]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"))
+
+## ... but select nothing for [, as for lists
+target <- parse_env_subset(x[1, 0], substitute = TRUE)
+stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
 
 res <- try(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
            silent = TRUE)
-## stopifnot(inherits(res, "try-error"))
+stopifnot(inherits(res, "try-error"))
 
 ## Incorrect number of subscripts
 x <- listenv()

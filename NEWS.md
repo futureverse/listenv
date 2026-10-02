@@ -13,6 +13,11 @@
    error or, silently, an incorrect index. Now it gives an
    informative error.
 
+ * `parse_env_subset(x[[i, j]])` on a list environment `x` with
+   dimensions did not give an error for zero indices, e.g.
+   `x[[1, 0]]`, but returned an empty target, although it gave an
+   error for `x[[0]]`.
+
 
 # Version 1.0.0 (2026-06-21)
 

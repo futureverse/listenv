@@ -201,6 +201,10 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
           i <- subset[[kk]]
           stop_if_not(is.numeric(i))
           d <- dim[kk]
+          if (op == "[[" && any(i == 0)) {
+            stopf("Invalid (zero) indices for dimension #%d: %s",
+                  kk, hpaste(i))
+          }
           if (any(i < 0)) {
             if (op == "[[") {
               stopf("Invalid (negative) indices for dimension #%d: %s",
