@@ -31,8 +31,8 @@ parse_env_subset(
 
 - is_variable:
 
-  (logical) If TRUE and an element name is specified, then the name is
-  checked to be a valid variable name.
+  (logical) Ignored. Any name is a valid variable name, as for
+  [`base::assign()`](https://rdrr.io/r/base/assign.html).
 
 ## Value
 

@@ -2,15 +2,34 @@
 
 ## Version (development version)
 
+### Significant Changes
+
+- [`parse_env_subset()`](https://listenv.futureverse.org/reference/parse_env_subset.md)
+  on `x[NULL]` and `x[1, NULL]` now selects zero elements - it used to
+  select all elements.
+
+- [`parse_env_subset()`](https://listenv.futureverse.org/reference/parse_env_subset.md)
+  on `x[[]]`, `x[[NULL]]`, `x[[integer(0)]]` now gives an error as R
+  does for lists - it used to select all elements.
+
 ### Bug Fixes
 
-- `length(x) <- n` on a list environment `x` with dimensions did not
-  drop the dimensions, which left `x` in an invalid state.
+- `length(x) <- n` on a list environment with dimensions did not drop
+  the dimensions, which left `x` in an invalid state.
 
-- `x[[i, j]]` on a list environment `x` with dimensions gave an obscure
+- `x[[i, j]]` on a list environment with dimensions gave an obscure
   error when the subscripts referred to more than one element.
 
 - `x[[name]]` where `length(name) != 1` gave an obscure error.
+
+- `x[[NA]]`, `x[[NA_integer_]]` and `x[[NA_real_]]` gave an obscure
+  error instead of returning `NULL`, as done for lists.
+
+- Subsetting a list environment did not truncate fractional indices
+  toward zero, as done for lists and arrays. For example, `x[-1.5]`
+  returned all elements instead of behaving as `x[-1]`, which drops the
+  first element. Similarly, `x[1.5, 2.9]` behaved as `x[1, 3]` instead
+  of `x[1, 2]`.
 
 - [`parse_env_subset()`](https://listenv.futureverse.org/reference/parse_env_subset.md)
   on `x[[i, j]]` with dimensions did not give an error for zero indices,
@@ -47,6 +66,10 @@
   `x[1, NULL]` selected all elements instead of none. Also, `x[[]]`,
   `x[[NULL]]`, and `x[[integer(0)]]`, and similarly for more dimensions,
   e.g. `x[[1, ]]`, did not give an error, as done for lists and arrays.
+
+- `parse_env_subset("1a", envir = x)` gave an error on ‘Not a valid
+  variable name’, although any name is a valid variable name, e.g.
+  `x <- listenv("1a" = 1)`.
 
 ## Version 1.0.0
 

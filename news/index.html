@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0-9014</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0-9019</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,10 +71,17 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="version-development-version">Version (development version)<a class="anchor" aria-label="anchor" href="#version-development-version"></a></h2>
 <div class="section level3">
+<h3 id="significant-changes-development-version">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-development-version"></a></h3>
+<ul><li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[NULL]</code> and <code>x[1, NULL]</code> now selects zero elements - it used to select all elements.</p></li>
+<li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[]]</code>, <code>x[[NULL]]</code>, <code>x[[integer(0)]]</code> now gives an error as R does for lists - it used to select all elements.</p></li>
+</ul></div>
+<div class="section level3">
 <h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li><p><code>length(x) &lt;- n</code> on a list environment <code>x</code> with dimensions did not drop the dimensions, which left <code>x</code> in an invalid state.</p></li>
-<li><p><code>x[[i, j]]</code> on a list environment <code>x</code> with dimensions gave an obscure error when the subscripts referred to more than one element.</p></li>
+<ul><li><p><code>length(x) &lt;- n</code> on a list environment with dimensions did not drop the dimensions, which left <code>x</code> in an invalid state.</p></li>
+<li><p><code>x[[i, j]]</code> on a list environment with dimensions gave an obscure error when the subscripts referred to more than one element.</p></li>
 <li><p><code>x[[name]]</code> where <code>length(name) != 1</code> gave an obscure error.</p></li>
+<li><p><code>x[[NA]]</code>, <code>x[[NA_integer_]]</code> and <code>x[[NA_real_]]</code> gave an obscure error instead of returning <code>NULL</code>, as done for lists.</p></li>
+<li><p>Subsetting a list environment did not truncate fractional indices toward zero, as done for lists and arrays. For example, <code>x[-1.5]</code> returned all elements instead of behaving as <code>x[-1]</code>, which drops the first element. Similarly, <code>x[1.5, 2.9]</code> behaved as <code>x[1, 3]</code> instead of <code>x[1, 2]</code>.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[i, j]]</code> with dimensions did not give an error for zero indices, e.g. <code>x[[1, 0]]</code>, but returned an empty target, although it gave an error for <code>x[[0]]</code>.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[i, j]]</code> with named dimensions returned elements <code>idx</code> and <code>exists</code> with dimnames that should not be there.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[i, j]]</code> with more or fewer dimensions than subscripts would either give an obscure error or, silently, an incorrect index.</p></li>
@@ -83,6 +90,7 @@
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[names]</code> gave an obscure error when <code>length(names) &gt; 1</code> and some names did not exist.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x$name</code> and <code>x[["name"]]</code> would report <code>exists = TRUE</code> even if <code>name</code> did not exist in <code>x</code> but in one of the parent environments.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> treated a <code>NULL</code> subset as an empty one, e.g. <code>x[NULL]</code> and <code>x[1, NULL]</code> selected all elements instead of none. Also, <code>x[[]]</code>, <code>x[[NULL]]</code>, and <code>x[[integer(0)]]</code>, and similarly for more dimensions, e.g. <code>x[[1, ]]</code>, did not give an error, as done for lists and arrays.</p></li>
+<li><p><code>parse_env_subset("1a", envir = x)</code> gave an error on ‘Not a valid variable name’, although any name is a valid variable name, e.g. <code>x &lt;- listenv("1a" = 1)</code>.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
