@@ -249,6 +249,23 @@ str(target)
 stopifnot(target$name == "a", target$idx == 1L, target$exists)
 rm(list = c("y", "k"))
 
+## Multiple names, where some do not exist
+y <- listenv(a = 1, b = 2)
+target <- parse_env_subset(y[c("a", "zz")], substitute = TRUE)
+str(target)
+stopifnot(identical(target$name, c("a", "zz")),
+          identical(target$idx, c(1L, NA_integer_)),
+          identical(unname(target$exists), c(TRUE, FALSE)))
+
+y <- listenv()
+length(y) <- 2L
+target <- parse_env_subset(y[c("a", "b")], substitute = TRUE)
+str(target)
+stopifnot(identical(target$name, c("a", "b")),
+          all(is.na(target$idx)),
+          !any(target$exists))
+rm(list = "y")
+
 ## Odds and ends
 #target <- parse_env_subset(x[[""]], substitute = TRUE)
 #str(target)

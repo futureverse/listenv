@@ -260,7 +260,7 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
 
   ## Validate
   if (is.null(dim) && length(res$subset) == 1 && identical(res$op, "[")) {
-    if (any(is.na(res$idx)) && !nzchar(res$name)) {
+    if (any(is.na(res$idx) & !nzchar(res$name))) {
       stopf("Invalid subset: %s", sQuote(code), call. = TRUE)
     }
   }
