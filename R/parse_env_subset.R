@@ -149,11 +149,14 @@ parse_env_subset <- function(expr, envir = parent.frame(), substitute = TRUE, is
                 kk, sQuote(code), call. = FALSE)
         }
       } else if (is.numeric(subset_kk)) {
+        ## Fractional indices are truncated toward zero, as for lists
+        subset[[kk]] <- trunc(subset_kk)
       } else {
         stopf("Invalid subset for dimension #%d of type %s: %s",
 	      kk, sQuote(typeof(subset_kk)), sQuote(code), call. = FALSE)
       }
     } # for (kk ...)
+    res$subset <- subset
 
     ## Special: listenv:s
     envir <- res$envir

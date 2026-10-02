@@ -280,6 +280,25 @@ stopifnot(identical(target$name, c("a", "b")),
           !any(target$exists))
 rm(list = "y")
 
+## Fractional indices are truncated toward zero, as for lists
+y <- listenv(a = 1, b = 2, c = 3)
+target <- parse_env_subset(y[[1.5]], substitute = TRUE)
+str(target)
+stopifnot(target$name == "a", target$idx == 1L, target$exists)
+
+target <- parse_env_subset(y[c(0.5, 2.9)], substitute = TRUE)
+str(target)
+stopifnot(identical(target$name, "b"), target$idx == 2L, target$exists)
+
+target <- parse_env_subset(y[-1.5], substitute = TRUE)
+str(target)
+stopifnot(identical(target$name, c("b", "c")), all(target$idx == 2:3))
+
+res <- try(parse_env_subset(y[[0.5]], substitute = TRUE), silent = TRUE)
+stopifnot(inherits(res, "try-error"),
+          grepl("zero", conditionMessage(attr(res, "condition"))))
+rm(list = "y")
+
 ## Odds and ends
 #target <- parse_env_subset(x[[""]], substitute = TRUE)
 #str(target)

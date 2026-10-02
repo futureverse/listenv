@@ -204,6 +204,15 @@ stopifnot(inherits(res, "try-error"))
 target <- parse_env_subset(x[1, 0], substitute = TRUE)
 stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
 
+## Fractional indices are truncated toward zero, as for arrays
+target <- parse_env_subset(x[[1.5, 2]], substitute = TRUE)
+stopifnot(target$idx == 3L)
+
+res <- try(target <- parse_env_subset(x[[1, 0.5]], substitute = TRUE),
+           silent = TRUE)
+stopifnot(inherits(res, "try-error"),
+          grepl("zero", conditionMessage(attr(res, "condition"))))
+
 res <- try(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
            silent = TRUE)
 stopifnot(inherits(res, "try-error"))

@@ -8,26 +8,31 @@
  * `x[[i, j]]` on a list environment `x` with dimensions gave an
    obscure error when the subscripts referred to more than one element.
 
- * `parse_env_subset(x[[i, j]])` with more or fewer dimensions than
-   subscripts would either give an obscure error or, silently, an
-   incorrect index.
-
- * `parse_env_subset(x[[i, j]])` with dimensions did not give an error
-   for zero indices, e.g.  `x[[1, 0]]`, but returned an empty target,
-   although it gave an error for `x[[0]]`.
-
- * `parse_env_subset(x[[i, j]])` with named dimensions returned
-   elements `idx` and `exists` with dimnames that should not be there.
-
- * `parse_env_subset(x[i])` would treat `x[i]` as `x["i"]`, and
-   similarly for more dimensions, e.g. `parse_env_subset(x[i, j])`.
-
  * `x[[name]]` where `length(name) != 1` gave an obscure error.
 
- * `parse_env_subset(x[names])` gave an obscure error when
+ * `parse_env_subset()` on `x[[i, j]]` with dimensions did not give an
+   error for zero indices, e.g.  `x[[1, 0]]`, but returned an empty
+   target, although it gave an error for `x[[0]]`.
+
+ * `parse_env_subset()` on `x[[i, j]]` with named dimensions returned
+   elements `idx` and `exists` with dimnames that should not be there.
+
+ * `parse_env_subset()` on `x[[i, j]]` with more or fewer dimensions
+   than subscripts would either give an obscure error or, silently, an
+   incorrect index.
+
+ * `parse_env_subset()` did not truncate fractional indices, as done
+   for lists and arrays. For example, `x[[1.5]]` gave `idx = 1.5`
+   instead of `1`, and `x[[0.5]]` gave an obscure error instead of an
+   error on a zero index.
+
+ * `parse_env_subset()` would treat `x[i]` as `x["i"]`, and similarly
+   for more dimensions, e.g. `parse_env_subset(x[i, j])`.
+
+ * `parse_env_subset()` on `x[names]` gave an obscure error when
    `length(names) > 1` and some names did not exist.
 
- * `parse_env_subset() on `x$name` and `x[["name"]]` would report
+ * `parse_env_subset()` on `x$name` and `x[["name"]]` would report
    `exists = TRUE` even if `name` did not exist in `x` but in one of
    the parent environments.
 
