@@ -999,6 +999,17 @@ for (i in list(integer(0L), 1:2, NA_real_, Inf, 0, -1)) {
 stopifnot(identical(names(x), c("a", "b")), length(x) == 2L)
 
 
+message("* x[[name]] with more or less than one name is an error ...")
+x <- listenv(a = 1, b = 2)
+for (name in list(character(0L), c("a", "b"), c("a", "c"))) {
+  res <- tryCatch(x[[name]], error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("more than one element", conditionMessage(res))
+  )
+}
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

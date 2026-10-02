@@ -10,8 +10,7 @@
 
  * `parse_env_subset(x[[i, j]])` on a list environment `x` with more
    or fewer dimensions than subscripts would either give an obscure
-   error or, silently, an incorrect index. Now it gives an
-   informative error.
+   error or, silently, an incorrect index.
 
  * `parse_env_subset(x[[i, j]])` on a list environment `x` with
    dimensions did not give an error for zero indices, e.g.
@@ -24,6 +23,8 @@
 
  * `parse_env_subset(x[i])` would treat `x[i]` as `x["i"]`, and
    similarly for more dimensions, e.g. `parse_env_subset(x[i, j])`.
+
+ * `x[[name]]` where `length(name) != 1` gave an obscure error.
 
 
 # Version 1.0.0 (2026-06-21)

@@ -511,16 +511,18 @@ subset_to_index <- function(x, idxs, missing, envir) {
     }
   } else {
     i <- idxs[[1L]]
-    if (is.character(i)) {
-      name <- i
-      i <- match(name, table = names(map))
-      if (is.na(i)) return(NULL)
-    } else if (!is.numeric(i)) {
+    if (!is.character(i) && !is.numeric(i)) {
       return(NextMethod())
     }
 
     if (length(i) != 1L) {
       stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
+    }
+
+    if (is.character(i)) {
+      name <- i
+      i <- match(name, table = names(map))
+      if (is.na(i)) return(NULL)
     }
 
     if (i < 1L || i > n) {
