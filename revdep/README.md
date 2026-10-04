@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                                                              |
 |ctype    |en_US.UTF-8                                                              |
 |tz       |America/Los_Angeles                                                      |
-|date     |2026-10-02                                                               |
+|date     |2026-10-04                                                               |
 |pandoc   |3.11                                                                     |
 |quarto   |1.10.18                                                                  |
 
@@ -18,7 +18,7 @@
 
 |package |old   |new        |Δ  |
 |:-------|:-----|:----------|:--|
-|listenv |1.0.0 |1.0.0-9014 |*  |
+|listenv |1.0.0 |1.0.0-9021 |*  |
 
 # Revdeps
 
