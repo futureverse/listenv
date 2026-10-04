@@ -358,26 +358,26 @@ message("* Exceptions ...")
 x <- listenv()
 dim(x) <- c(2, 3)
 
-res <- try(x[[3, 3]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[3, 3]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[3, 3], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[3, 3], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[c(-1, 1), 3], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(-1, 1), 3], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[c(TRUE, TRUE, TRUE), ], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(TRUE, TRUE, TRUE), ], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(dimnames(x) <- NA, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dimnames(x) <- NA, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(dimnames(x) <- list("a", "b", "c"), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dimnames(x) <- list("a", "b", "c"), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(dimnames(x) <- list("a", NULL), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dimnames(x) <- list("a", NULL), error = identity)
+stopifnot(inherits(res, "error"))
 
 dimnames(x) <- list(c("a", "b"), NULL)
 
@@ -417,8 +417,8 @@ stopifnot(!is.null(names(x)), identical(names(x), c("a", "b", "d", "e", "f")))
 
 message("* dim_na() exceptions ...")
 x <- as.listenv(1:6)
-res <- try(dim_na(x) <- c(NA, NA), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dim_na(x) <- c(NA, NA), error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* is.matrix() and is.array() ...")
 x <- as.listenv(1:6)
@@ -451,31 +451,32 @@ stopifnot(is.matrix(y), nrow(y) == 2, ncol(y) == 3)
 
 message("* dimnames() exceptions ...")
 x <- as.listenv(1:6)
-res <- try(dimnames(x) <- list(letters[1:6]), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dimnames(x) <- list(letters[1:6]), error = identity)
+stopifnot(inherits(res, "error"))
 
 dim(x) <- c(2, 3)
-res <- try(dimnames(x) <- list(letters[1:3], letters[1:3]), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dimnames(x) <- list(letters[1:3], letters[1:3]),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Wrong number of dimensions in [ and [<- ...")
 x <- as.listenv(1:24)
 dim(x) <- c(2, 3, 4)
-res <- try(x[1, 2], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
-res <- try(x[1, 2] <- 99, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2], error = identity)
+stopifnot(inherits(res, "error"))
+res <- tryCatch(x[1, 2] <- 99, error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Character subscript not found ...")
 x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 dimnames(x) <- list(c("a", "b"), c("c", "d", "e"))
-res <- try(x[["z", "c"]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[["z", "c"]], error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Invalid subscript type ...")
-res <- try(x[[1 + 2i, 1]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1 + 2i, 1]], error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Logical subscript shorter than dimension (recycled) ...")
 y <- x[c(TRUE), , drop = FALSE]
@@ -483,20 +484,231 @@ stopifnot(length(y) == 6)
 
 message("* dim(x) <- c(2,3) on non-empty with wrong length ...")
 x <- as.listenv(1:4)
-res <- try(dim(x) <- c(2, 3), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(dim(x) <- c(2, 3), error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Only one dimension can be dropped at the time ...")
 x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
-res <- try(x[1, 2] <- NULL, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2] <- NULL, error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* Removing by zero-length index has no effect ...")
 x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 x[integer(0), ] <- NULL
 stopifnot(length(x) == 6)
+
+message("* length(x) <- n drops dimensions, cf. base R ...")
+for (n in c(4, 8)) {
+  x <- as.listenv(1:6)
+  dim(x) <- c(2, 3)
+  dimnames(x) <- list(c("a", "b"), c("A", "B", "C"))
+  names(x) <- letters[1:6]
+  length(x) <- n
+  stopifnot(
+    length(x) == n,
+    is.null(dim(x)),
+    is.null(dimnames(x)),
+    identical(names(x), c(letters[1:6], rep("", times = 2))[1:n])
+  )
+  y <- as.list(x)
+  stopifnot(length(y) == n)
+  print(x)
+}
+
+message("* length(x) <- length(x) preserves dimensions ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+length(x) <- 6
+stopifnot(identical(dim(x), c(2L, 3L)))
+
+message("* x[[i, j]] with more than one element is an error ...")
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- tryCatch(x[[1:2, 1]], error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("more than one element", conditionMessage(res))
+)
+res <- tryCatch(x[[1, 0]], error = identity)
+stopifnot(
+  inherits(res, "error"),
+  grepl("more than one element", conditionMessage(res))
+)
+
+message("* x[[i, j]] with incorrect number of subscripts is an error ...")
+x <- as.listenv(1:6)
+for (expr in list(quote(x[[1, 2]]), quote(x[[1, 2]] <- 0))) {
+  res <- tryCatch(eval(expr), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Incorrect number of subscripts (2) for a list environment with 0 dimensions", conditionMessage(res), fixed = TRUE)
+  )
+}
+dim(x) <- c(2, 3)
+for (expr in list(quote(x[[1, 2, 3]]), quote(x[[1, 2, 3]] <- 0))) {
+  res <- tryCatch(eval(expr), error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Incorrect number of subscripts (3) for a list environment with 2 dimensions", conditionMessage(res), fixed = TRUE)
+  )
+}
+
+## Fractional indices are truncated toward zero, as for arrays
+exprs <- list(
+  quote(x[[1.5, 2]]),
+  quote(x[1.5, 2.9]),
+  quote(x[-1.5, 1]),
+  quote(x[[1.5, 2]] <- 9),
+  quote(x[1.5, 2.9] <- 9)
+)
+## For arrays, x[[1, 0.5]] gives x[[1, 1]] in R (< 4.2.0)
+if (getRversion() >= "4.2.0") {
+  exprs <- c(exprs, list(
+    quote(x[[1, 0.5]])
+  ))
+}
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- identical(expr[[1]], as.symbol("<-"))
+  x <- array(as.list(1:6), dim = c(2, 3))
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(1:6)
+  dim(x) <- c(2, 3)
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(inherits(res, "error"))
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    stopifnot(identical(unlist(res), unlist(truth)))
+  }
+}
+
+## x[[1, 0.5]] is an error, because it is x[[1, 0]], regardless of R
+## version
+x <- as.listenv(1:6)
+dim(x) <- c(2, 3)
+res <- tryCatch(x[[1, 0.5]], error = identity)
+stopifnot(inherits(res, "error"))
+
+## Missing logical indices give NULL elements for [, as for lists
+exprs <- list(
+  quote(x[NA, 1]),
+  quote(x[c(TRUE, NA), ]),
+  quote(x[c(TRUE, NA), , drop = FALSE]),
+  quote(x[1, c(NA, TRUE, FALSE)]),
+  quote(x[[NA, 1]]),
+  quote(x[[c(TRUE, NA), 1]]),
+  quote(x[NA, 1] <- 0),
+  quote(x[c(TRUE, NA), 1] <- 0),
+  quote(x[c(TRUE, NA), ] <- list(7, 8, 9)),
+  quote(x[[NA, 1]] <- 0)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- (as.character(expr[[1]]) == "<-")
+  x0 <- as.list(1:6)
+  dim(x0) <- c(2, 3)
+  dimnames(x0) <- list(c("r1", "r2"), c("A", "B", "C"))
+  x <- x0
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(x0)
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), x0)
+    )
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    ## FIXME: Dropping to a vector does not preserve the dimnames as
+    ## names, e.g. x[1, ], as done for lists
+    if (is.list(truth) && is.null(dim(truth))) names(truth) <- NULL
+    stopifnot(identical(res, truth))
+  }
+}
+
+## Growing a list environment drops its dimensions, as for lists
+exprs <- list(
+  quote(x[[7]] <- 0),
+  quote(x[[8]] <- 0),
+  quote(x[7] <- 0),
+  quote(x[c(1, 8)] <- 0),
+  quote(x$foo <- 1),
+  quote(x[["foo"]] <- 1),
+  quote(x["foo"] <- 1),
+  quote(x[[4]] <- 0),
+  quote(x[[7]] <- NULL)
+)
+for (named in c(FALSE, TRUE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    x0 <- as.list(1:6)
+    dim(x0) <- c(2, 3)
+    dimnames(x0) <- list(c("r1", "r2"), c("A", "B", "C"))
+    if (named) names(x0) <- letters[1:6]
+    x <- x0
+    eval(expr)
+    truth <- x
+    x <- as.listenv(x0)
+    eval(expr)
+    stopifnot(
+      length(x) == length(truth),
+      identical(dim(x), dim(truth)),
+      identical(dimnames(x), dimnames(truth)),
+      identical(names(x), names(truth)),
+      identical(as.list(x), truth)
+    )
+  }
+}
+
+## Filling empty elements does not grow a list environment, so its
+## dimensions are kept
+exprs <- list(
+  quote(x[[1]] <- 1),
+  quote(x[[6]] <- 1),
+  quote(x[2, 3] <- 1),
+  quote(x[[2, 3]] <- 1),
+  quote(x[["r2", "C"]] <- 1),
+  quote(x[] <- 1),
+  quote(for (kk in 1:6) x[[kk]] <- kk),
+  quote(x[["c"]] <- 1),
+  quote(x$c <- 1)
+)
+for (expr in exprs) {
+  message(sprintf("- %s (empty)", paste(deparse(expr), collapse = "")))
+  x <- listenv()
+  dim(x) <- c(2, 3)
+  dimnames(x) <- list(c("r1", "r2"), c("A", "B", "C"))
+  names(x) <- letters[1:6]
+  eval(expr)
+  stopifnot(
+    length(x) == 6L,
+    identical(dim(x), c(2L, 3L)),
+    identical(dimnames(x), list(c("r1", "r2"), c("A", "B", "C"))),
+    identical(names(x), letters[1:6])
+  )
+}
+
+## x[[NA, 1]] is an error, also when it refers to a single element
+x <- as.listenv(1:3)
+dim(x) <- c(1, 3)
+res <- tryCatch(x[[NA, 1]], error = identity)
+stopifnot(inherits(res, "error"))
 
 message("* List environment and multiple dimensions ... DONE")
 

@@ -53,22 +53,22 @@ message("*** aperm() and t() - exceptions ...")
 
 ## aperm on non-array
 x <- as.listenv(1:3)
-res <- try(aperm(x, perm = 1), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(aperm(x, perm = 1), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## aperm with wrong 'perm' length
 x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
-res <- try(aperm(x, perm = 1:3), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(aperm(x, perm = 1:3), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## aperm with out-of-range 'perm'
-res <- try(aperm(x, perm = c(1, 3)), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(aperm(x, perm = c(1, 3)), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## aperm with duplicated 'perm'
-res <- try(aperm(x, perm = c(1, 1)), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(aperm(x, perm = c(1, 1)), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## aperm identity (no-op)
 x <- as.listenv(1:6)
@@ -87,8 +87,8 @@ stopifnot(identical(dim(y), c(1L, 3L)))
 message("*** t.listenv - error for 3D array ...")
 x <- as.listenv(1:24)
 dim(x) <- c(2, 3, 4)
-res <- try(t(x), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(t(x), error = identity)
+stopifnot(inherits(res, "error"))
 
 message("*** aperm() and t() - exceptions ... DONE")
 

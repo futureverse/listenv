@@ -735,53 +735,53 @@ x <- listenv()
 length(x) <- 3L
 names(x) <- c("a", "b", "c")
 
-res <- try(names(x) <- c("a", "b"), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(names(x) <- c("a", "b"), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1:2]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1:2]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[0]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[0]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[length(x) + 1]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[length(x) + 1]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1 + 2i]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1 + 2i]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[1 + 2i], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1 + 2i], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1 + 2i]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1 + 2i]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[1 + 2i] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1 + 2i] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[integer(0L)]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[integer(0L)]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1:2]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1:2]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[Inf]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[Inf]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[0]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[0]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[-1]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[-1]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[character(0L)]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[character(0L)]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[c("a", "b")]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[c("a", "b")]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[""]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[""]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -853,8 +853,8 @@ print(x)
 ## map() is defunct
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1, b = 2)
-res <- try(map(x), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(map(x), error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -871,8 +871,8 @@ x$nonexistent <- NULL
 x[[10L]] <- NULL
 
 ## [<- with zero-length replacement value
-res <- try({ x[1:2] <- list() }, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch({ x[1:2] <- list() }, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -901,20 +901,20 @@ x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 
 ## [.listenv: wrong number of dimensions
-res <- try(x[1, 2, 3], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2, 3], error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [<-.listenv: wrong number of dimensions
-res <- try(x[1, 2, 3] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2, 3] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [<-.listenv: multi-dim NULL with wrong number of non-missing dims
-res <- try(x[, ] <- NULL, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[, ] <- NULL, error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [.listenv: mixed negative and positive subscripts
-res <- try(x[c(-1, 1)], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(-1, 1)], error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -939,16 +939,16 @@ stopifnot(is.null(x[["nonexistent"]]))
 ## Negative length error
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
-res <- try(length(x) <- -1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(length(x) <- -1, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## map() is defunct
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1)
-res <- try(listenv::map(x), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(listenv::map(x), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Test deprecated path of map()
 Sys.setenv(R_LISTENV_MAP_DEPRECATED = "deprecated")
@@ -963,16 +963,312 @@ Sys.unsetenv("R_LISTENV_MAP_DEPRECATED")
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
 x[1:3] <- 1:3
-res <- try(x[c(1, -1)], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(1, -1)], error = identity)
+stopifnot(inherits(res, "error"))
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## [<- with zero-length replacement
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
 x[1:3] <- 1:3
-res <- try(x[1] <- list(), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1] <- list(), error = identity)
+stopifnot(inherits(res, "error"))
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[i, j]] on listenv without dimensions
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+res <- tryCatch(x[[1, 2]], error = identity)
+stopifnot(inherits(res, "error"))
+res <- tryCatch(x[[1, 2]] <- 3, error = identity)
+stopifnot(inherits(res, "error"))
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## [[<- NULL with invalid names or indices
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+x <- listenv(a = 1, b = 2)
+for (name in list(character(0L), c("a", "b"), "")) {
+  res <- tryCatch(x[[name]] <- NULL, error = identity)
+  stopifnot(inherits(res, "error"))
+}
+for (i in list(integer(0L), 1:2, NA_real_, Inf, 0, -1)) {
+  res <- tryCatch(x[[i]] <- NULL, error = identity)
+  stopifnot(inherits(res, "error"))
+}
+stopifnot(identical(names(x), c("a", "b")), length(x) == 2L)
+
+
+message("* x[[name]] with more or less than one name is an error ...")
+x <- listenv(a = 1, b = 2)
+for (name in list(character(0L), c("a", "b"), c("a", "c"))) {
+  res <- tryCatch(x[[name]], error = identity)
+  stopifnot(
+    inherits(res, "error"),
+    grepl("more than one element", conditionMessage(res))
+  )
+}
+
+
+## Fractional indices are truncated toward zero, as for lists
+message("* Fractional indices ...")
+exprs <- list(
+  quote(x[[1.5]]),
+  quote(x[[3.9]]),
+  quote(x[c(0.5, 2.9)]),
+  quote(x[-1.5]),
+  quote(x[c(-0.5, -1.5)]),
+  quote(x[[1.5]] <- 9),
+  quote(x[[0.5]] <- 9),
+  quote(x[c(1.5, 3.9)] <- 9)
+)
+## For lists, x[[0.5]] gives x[[1]] in R (< 4.2.0)
+if (getRversion() >= "4.2.0") {
+  exprs <- c(exprs, list(
+    quote(x[[0.5]])
+  ))
+}
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- identical(expr[[1]], as.symbol("<-"))
+  x <- list(a = 1, b = 2, c = 3)
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(inherits(res, "error"))
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    stopifnot(identical(res, truth))
+  }
+}
+
+## x[[0.5]] is an error, because it is x[[0]], regardless of R version
+x <- as.listenv(list(a = 1, b = 2, c = 3))
+res <- tryCatch(x[[0.5]], error = identity)
+stopifnot(inherits(res, "error"))
+message("* Fractional indices ... DONE")
+
+
+## A missing index gives NULL for [[, as for lists
+message("* Missing [[ index ...")
+x <- as.listenv(list(a = 1, b = 2, c = 3))
+for (i in list(NA, NA_integer_, NA_real_, NaN, NA_character_)) {
+  message(sprintf("- x[[%s]]", deparse(i)))
+  stopifnot(is.null(x[[i]]))
+}
+message("* Missing [[ index ... DONE")
+
+
+## Zero indices are dropped for [<-, as for lists
+message("* Zero indices in [<- ...")
+exprs <- list(
+  quote(x[0] <- 9),
+  quote(x[c(0, 2)] <- 9),
+  quote(x[c(2, 0)] <- 9),
+  quote(x[c(0, 0)] <- 9),
+  quote(x[c(0, 2)] <- c(8, 9)),
+  quote(x[c(0.5, 2)] <- 9),
+  quote(x[c(0, 2)] <- NULL),
+  quote(x[0] <- NULL)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth_warning <- NULL
+  withCallingHandlers({
+    eval(expr)
+  }, warning = function(w) {
+    truth_warning <<- w
+    invokeRestart("muffleWarning")
+  })
+  truth <- x
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res_warning <- NULL
+  withCallingHandlers({
+    eval(expr)
+  }, warning = function(w) {
+    res_warning <<- w
+    invokeRestart("muffleWarning")
+  })
+  res <- as.list(x)
+  stopifnot(
+    identical(res, truth),
+    is.null(res_warning) == is.null(truth_warning)
+  )
+}
+message("* Zero indices in [<- ... DONE")
+
+
+## Negative indices select all other elements for [<-, as for lists
+message("* Negative indices in [<- ...")
+exprs <- list(
+  quote(x[-1] <- 9),
+  quote(x[c(-1, -3)] <- 9),
+  quote(x[c(-1, -1)] <- 9),
+  quote(x[c(-1, 0)] <- 9),
+  quote(x[-4] <- 9),
+  quote(x[-1.5] <- 9),
+  quote(x[-1] <- c(8, 9)),
+  quote(x[-1] <- c(7, 8, 9)),
+  quote(x[-1] <- NULL),
+  quote(x[c(-1, -2, -3)] <- NULL),
+  quote(x[c(-1, 2)] <- 9),
+  quote(x[c(-1, NA)] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth_warning <- NULL
+  truth <- tryCatch(withCallingHandlers({
+    eval(expr)
+    x
+  }, warning = function(w) {
+    truth_warning <<- w
+    invokeRestart("muffleWarning")
+  }), error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res_warning <- NULL
+  res <- tryCatch(withCallingHandlers({
+    eval(expr)
+    as.list(x)
+  }, warning = function(w) {
+    res_warning <<- w
+    invokeRestart("muffleWarning")
+  }), error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), list(a = 1, b = 2, c = 3))
+    )
+  } else {
+    stopifnot(
+      identical(res, truth),
+      is.null(res_warning) == is.null(truth_warning)
+    )
+  }
+}
+message("* Negative indices in [<- ... DONE")
+
+
+## Missing indices give NULL elements for [, as for lists
+message("* Missing indices in [ ...")
+exprs <- list(
+  quote(x[c(1, NA)]),
+  quote(x[NA_real_]),
+  quote(x[NA_integer_]),
+  quote(x[c(NA_real_, NA_real_)]),
+  quote(x[c(2, NaN)]),
+  quote(x[c(0, NA)]),
+  quote(x[c(1.5, NA)]),
+  quote(x[c(-1, NA)])
+)
+for (named in c(TRUE, FALSE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    x <- list(a = 1, b = 2, c = 3)
+    if (!named) names(x) <- NULL
+    truth <- tryCatch(eval(expr), error = identity)
+    x <- as.listenv(x)
+    res <- tryCatch(as.list(eval(expr)), error = identity)
+    if (inherits(truth, "error")) {
+      stopifnot(inherits(res, "error"))
+    } else {
+      stopifnot(identical(res, truth))
+    }
+  }
+}
+message("* Missing indices in [ ... DONE")
+
+
+## Missing indices are ignored for [<-, as for lists, but only if
+## the replacement value is of length one
+message("* Missing indices in [<- ...")
+exprs <- list(
+  quote(x[c(1, NA)] <- 9),
+  quote(x[NA_real_] <- 9),
+  quote(x[NA_integer_] <- 9),
+  quote(x[c(2, NaN)] <- 9),
+  quote(x[c(1, NA, NA)] <- 9),
+  quote(x[c(1, NA, NA)] <- list(9)),
+  quote(x[c(1, NA)] <- c(8, 9)),
+  quote(x[c(NA_real_, NA_real_)] <- c(8, 9)),
+  quote(x[c(1, NA)] <- NULL),
+  quote(x[NA_real_] <- NULL),
+  quote(x[c(-1, NA)] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth <- tryCatch({
+    eval(expr)
+    x
+  }, error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res <- tryCatch({
+    eval(expr)
+    as.list(x)
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), list(a = 1, b = 2, c = 3))
+    )
+  } else {
+    stopifnot(identical(res, truth))
+  }
+}
+message("* Missing indices in [<- ... DONE")
+
+
+## Missing logical indices give NULL elements for [, as for lists
+message("* Missing logical indices in [ and [<- ...")
+exprs <- list(
+  quote(x[NA]),
+  quote(x[c(TRUE, NA)]),
+  quote(x[c(NA, FALSE, TRUE)]),
+  quote(x[c(TRUE, TRUE, TRUE, NA)]),
+  quote(x[NA] <- 9),
+  quote(x[c(TRUE, NA)] <- 9),
+  quote(x[c(TRUE, NA)] <- c(8, 9)),
+  quote(x[c(TRUE, NA)] <- NULL)
+)
+for (named in c(TRUE, FALSE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    is_assign <- (as.character(expr[[1]]) == "<-")
+    x <- list(a = 1, b = 2, c = 3)
+    if (!named) names(x) <- NULL
+    x0 <- x
+    truth <- tryCatch({
+      res <- eval(expr)
+      if (is_assign) x else res
+    }, error = identity)
+    x <- as.listenv(x0)
+    res <- tryCatch({
+      res <- eval(expr)
+      as.list(if (is_assign) x else res)
+    }, error = identity)
+    if (inherits(truth, "error")) {
+      stopifnot(
+        inherits(res, "error"),
+        ## A failed assignment must not modify 'x'
+        identical(as.list(x), x0)
+      )
+    } else {
+      stopifnot(identical(res, truth))
+    }
+  }
+}
+message("* Missing logical indices in [ and [<- ... DONE")
 
 
 ## Cleanup

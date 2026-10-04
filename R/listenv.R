@@ -240,6 +240,13 @@ if (!exists("lengths", mode = "function")) {
   }
   mapping(x) <- map
 
+  ## Remove dimensions, cf. base R
+  if (!is.null(dim(x))) {
+    names <- names(x)
+    dim(x) <- NULL
+    names(x) <- names
+  }
+
   invisible(x)
 }
 
@@ -345,7 +352,6 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
 #' @export
 #' @keywords internal
 `$.listenv` <- function(x, name) {
-#' @keywords internal
   map <- mapping(x)
   var <- map[name]
 
@@ -357,14 +363,16 @@ as.list.listenv <- function(x, all.names = TRUE, sorted = FALSE, ...) {
 
 
 ## [[i,j,...]] -> [[idx]]
-to_index <- function(x, idxs) {
+## If 'on_out_of_bound' is "NA", then out-of-bounds indices map to
+## NA_integer_, otherwise they produce an error
+to_index <- function(x, idxs, on_out_of_bound = c("error", "NA")) {
+  on_out_of_bound <- match.arg(on_out_of_bound)
   nidxs <- length(idxs)
 
   dim <- dim(x)
-  if (is.null(dim)) dim <- length(x)
   ndim <- length(dim)
   if (nidxs != ndim) {
-    stopf("Incorrect number of dimensions: %d != %d", nidxs, ndim)
+    stopf("Incorrect number of subscripts (%d) for a list environment with %d dimensions", nidxs, ndim)  #nolint
   }
   dimnames <- dimnames(x)
   idx_dimnames <- dimnames
@@ -393,19 +401,25 @@ to_index <- function(x, idxs) {
 	      kk, ni, d)
       }
       if (ni < d) i <- rep(i, length.out = d)
-      i <- which(i)
+      ## Missing values are kept as missing indices, as for arrays
+      i <- seq_along(i)[i]
     } else if (is.numeric(i)) {
       d <- dim[kk]
-      if (any(i > d)) {
-        stopf("Subscript for dimension #%d out of bounds [%d,%d]",
-	      kk, min(1, d), d)
-      }
+      ## Fractional indices are truncated toward zero, as for arrays
+      i <- trunc(i)
       if (any(i < 0)) {
         if (any(i > 0)) {
           stopf("Only 0's may be mixed with negative subscripts (dimension #%d)", kk)
         }
         ## Drop elements
         i <- setdiff(seq_len(d), -i)
+      }
+      if (any(i > d)) {
+        if (on_out_of_bound == "error") {
+          stopf("Subscript for dimension #%d out of bounds [%d,%d]",
+	        kk, min(1, d), d)
+        }
+        i[i > d] <- NA_integer_
       }
       ## Drop zeros
       i <- i[i != 0]
@@ -445,6 +459,48 @@ to_index <- function(x, idxs) {
 }
 
 
+## x[i], x[i,j,...], x[], x[,j], ... -> x[idx]
+## Resolves the unevaluated subscripts 'idxs' of a `[` or `[<-` call, where
+## implicit (missing) subscripts select all elements along that dimension,
+## and maps them to linear indices
+subset_to_index <- function(x, idxs, missing, envir) {
+  nidxs <- length(idxs)
+  dim <- dim(x)
+  ndim <- length(dim)
+
+  if (any(missing)) {
+    if (nidxs == ndim) {
+      for (kk in seq_len(ndim)) {
+        if (missing[kk]) {
+          idxs[[kk]] <- seq_len(dim[kk])
+        } else {
+          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
+        }
+      }
+    } else if (nidxs == 1) {
+      if (ndim == 0) {
+        idxs <- list(seq_len(length(x)))
+      } else {
+        ## Special case: Preserve dimensions when x[]
+        idxs <- lapply(dim, FUN = function(n) seq_len(n))
+        nidxs <- length(idxs)
+      }
+    }
+  } else {
+    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
+  }
+
+  if (nidxs <= 1L) {
+    i <- idxs[[1L]]
+    ## Fractional indices are truncated toward zero, as for lists
+    if (is.numeric(i)) i <- trunc(i)
+    i
+  } else {
+    to_index(x, idxs)
+  }
+}
+
+
 #' @export
 `[[.listenv` <- function(x, ...) {
   map <- mapping(x)
@@ -456,13 +512,19 @@ to_index <- function(x, idxs) {
   ## Subsetting by multiple dimensions?
   if (nidxs > 1L) {
     i <- to_index(x, idxs)
+    if (length(i) != 1L) {
+      stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
+    }
+    if (is.na(i)) {
+      stop("Subscript out of bounds: NA", call. = FALSE)
+    }
   } else {
     i <- idxs[[1L]]
-    if (is.character(i)) {
-      name <- i
-      i <- match(name, table = names(map))
-      if (is.na(i)) return(NULL)
-    } else if (!is.numeric(i)) {
+
+    ## A missing index, e.g. x[[NA]], gives NULL, as for lists
+    if (is.atomic(i) && length(i) == 1L && is.na(i)) return(NULL)
+
+    if (!is.character(i) && !is.numeric(i)) {
       return(NextMethod())
     }
 
@@ -470,8 +532,17 @@ to_index <- function(x, idxs) {
       stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
     }
 
+    if (is.character(i)) {
+      name <- i
+      i <- match(name, table = names(map))
+      if (is.na(i)) return(NULL)
+    } else if (is.numeric(i)) {
+      ## Fractional indices are truncated toward zero, as for lists
+      i <- trunc(i)
+    }
+
     if (i < 1L || i > n) {
-      stopf("Subscript out of bounds [%d,%d]: %d",
+      stopf("Subscript out of bounds [%d,%d]: %s",
             min(1, n), n, i, call. = FALSE)
     }
   }
@@ -504,35 +575,7 @@ to_index <- function(x, idxs) {
   missing <- sapply(idxs, FUN = function(x) {
     is.symbol(x) && identical("", deparse(x))
   })
-  if (any(missing)) {
-    if (nidxs == ndim) {
-      envir <- parent.frame()
-      for (kk in seq_len(ndim)) {
-        if (missing[kk]) {
-          idxs[[kk]] <- seq_len(dim[kk])
-        } else {
-          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
-        }
-      }
-    } else if (nidxs == 1) {
-      if (ndim == 0) {
-        idxs <- list(seq_len(length(x)))
-      } else {
-        # Special case: Preserve dimensions when x[]
-        idxs <- lapply(dim, FUN = function(n) seq_len(n))
-        nidxs <- length(idxs)
-     }
-    }
-  } else {
-    envir <- parent.frame()
-    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
-  }
-
-  if (nidxs <= 1L) {
-    i <- idxs[[1L]]
-  } else {
-    i <- to_index(x, idxs)
-  }
+  i <- subset_to_index(x, idxs, missing = missing, envir = parent.frame())
 
   map <- mapping(x)
   nmap <- length(map)
@@ -545,21 +588,22 @@ to_index <- function(x, idxs) {
     i <- match(name, table = names)
   } else if (is.numeric(i)) {
     ## Exclude elements with negative indices?
-    if (any(i < 0)) {
+    if (any(i < 0, na.rm = TRUE)) {
       stop_if_not(is.null(dim(i)))
-      if (any(i > 0)) {
+      if (any(i > 0, na.rm = TRUE) || anyNA(i)) {
         stop("Only 0's may be mixed with negative subscripts")
       }
       ## Drop elements
       i <- setdiff(seq_len(nmap), -i)
     }
-    ## Drop zeros?
+    ## Drop zeros, but keep missing indices, which give NULL elements
     if (is.null(dim(i))) {
-      i <- i[i != 0]
+      i <- i[is.na(i) | i != 0]
     }
   } else if (is.logical(i)) {
     if (length(i) < nmap) i <- rep(i, length.out = nmap)
-    i <- which(i)
+    ## Missing values are kept as missing indices, as for lists
+    i <- seq_along(i)[i]
   } else {
     return(NextMethod())
   }
@@ -580,7 +624,7 @@ to_index <- function(x, idxs) {
       names(res) <- names2
     }
 
-    # Ignore out-of-range indices
+    # Ignore missing and out-of-range indices
     valid <- which(i <= nmap)
     for (kk in valid) {
       value <- x[[i[kk]]]
@@ -665,6 +709,12 @@ assign_by_name <- function(x, name, value) {
     names[length(map)] <- var
     names(map) <- names
     mapping(x) <- map
+
+    ## Remove dimensions, cf. base R
+    if (!is.null(dim(x))) {
+      dim(x) <- NULL
+      names(x) <- names
+    }
   }
 
   ## Assign value
@@ -706,6 +756,13 @@ assign_by_index <- function(x, i, value) {
 
     ## Update map
     mapping(x) <- map
+
+    ## Remove dimensions, cf. base R
+    if (i > n && !is.null(dim(x))) {
+      names <- names(x)
+      dim(x) <- NULL
+      names(x) <- names
+    }
   } else {
     assign(var, value, envir = x, inherits = FALSE)
   }
@@ -823,6 +880,9 @@ remove_by_index <- function(x, i) {
         x <- assign_by_name(x, name = i, value = value)
       }
       return(invisible(x))
+    } else if (is.numeric(i)) {
+      ## Fractional indices are truncated toward zero, as for lists
+      i <- trunc(i)
     }
   }
 
@@ -895,44 +955,37 @@ remove_by_index <- function(x, i) {
     return(invisible(x))
   }
   
-  if (any(missing)) {
-    if (nidxs == ndim) {
-      envir <- parent.frame()
-      for (kk in seq_len(ndim)) {
-        if (missing[kk]) {
-          idxs[[kk]] <- seq_len(dim[kk])
-        } else {
-          idxs[[kk]] <- eval(idxs[[kk]], envir = envir, enclos = baseenv())
-        }
-      }
-    } else if (nidxs == 1) {
-      if (ndim == 0) {
-        idxs <- list(seq_len(length(x)))
-      } else {
-        ## Special case: Preserve dimensions when x[]
-        idxs <- lapply(dim, FUN = function(n) seq_len(n))
-        nidxs <- length(idxs)
-     }
-    }
-  } else {
-    envir <- parent.frame()
-    idxs <- lapply(idxs, FUN = eval, envir = envir, enclos = baseenv())
-  }
-
-  if (nidxs <= 1L) {
-    i <- idxs[[1L]]
-  } else {
-    i <- to_index(x, idxs)
-  }
+  i <- subset_to_index(x, idxs, missing = missing, envir = parent.frame())
 
   ni <- length(i)
   if (is.logical(i)) {
     n <- length(x)
     if (ni < n) i <- rep(i, length.out = n)
-    i <- which(i)
+    ## Missing values are kept as missing indices, as for lists
+    i <- seq_along(i)[i]
     ni <- length(i)
   }
 
+  ## Drop zero indices, as for lists
+  if (is.numeric(i)) {
+    i <- i[i != 0]
+    ## Negative indices select all other elements, as for lists
+    if (any(i < 0, na.rm = TRUE)) {
+      if (any(i > 0, na.rm = TRUE) || anyNA(i)) {
+        stop("Only 0's may be mixed with negative subscripts", call. = FALSE)
+      }
+      i <- setdiff(seq_along(x), -i)
+    }
+    ## Missing indices are ignored, as for lists, but only if the
+    ## replacement value is of length one
+    if (anyNA(i)) {
+      if (length(value) > 1L) {
+        stop("NAs are not allowed in subscripted assignments", call. = FALSE)
+      }
+      i <- i[!is.na(i)]
+    }
+    ni <- length(i)
+  }
 
   # Nothing to do?
   if (ni == 0L) return(invisible(x))

@@ -19,8 +19,8 @@ parse_env_subset(
 \item{substitute}{If \code{TRUE}, then the expression is \code{\link[base:substitute]{base::substitute()}}:ed,
 otherwise not.}
 
-\item{is_variable}{(logical) If TRUE and an element name is specified, then
-the name is checked to be a valid variable name.}
+\item{is_variable}{(logical) Ignored. Any name is a valid variable
+name, as for \code{\link[base:assign]{base::assign()}}.}
 }
 \value{
 A named list with elements:

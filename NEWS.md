@@ -1,4 +1,88 @@
-# Version 1.0.0 (2026-06-21)
+# Version 1.1.0 [2026-10-04]
+
+## Significant Changes
+
+ * `parse_env_subset()` on `x[NULL]` and `x[1, NULL]` now selects zero
+   elements - it used to select all elements.
+   
+ * `parse_env_subset()` on `x[[]]`, `x[[NULL]]`, `x[[integer(0)]]` now
+   gives an error as R does for lists - it used to select all elements.
+   
+## Bug Fixes
+
+ * Growing a list environment with dimensions, e.g. `length(x) <- n`,
+   `x[[n]] <- value`, `x[n] <- value`, and `x$name <- value`, where
+   `n > length(x)` or `name` is a new element, did not drop the
+   dimensions, as done for lists, which left `x` in an invalid state.
+
+ * `x[[i, j]]` on a list environment with dimensions gave an obscure
+   error when the subscripts referred to more than one element.
+
+ * `x[[name]]` where `length(name) != 1` gave an obscure error.
+
+ * `x[[NA]]`, `x[[NA_integer_]]` and `x[[NA_real_]]` gave an obscure
+   error instead of returning `NULL`, as done for lists.
+
+ * `x[i] <- value` gave an error if `i` contained zeros, e.g. `x[c(0,
+   2)] <- value` and `x[0] <- NULL`, instead of ignoring them, as done
+   for lists.
+
+ * `x[i] <- value` gave an error if `i` contained negative indices,
+   e.g. `x[-1] <- value` and `x[-1] <- NULL`, instead of assigning or
+   removing all other elements, as done for lists.
+
+ * `x[i]` did not handle missing values in `i` as done for lists. For
+   numeric indices, e.g. `x[c(1, NA)]`, it gave an obscure error, and
+   for logical indices, e.g. `x[NA]` and `x[c(TRUE, NA), ]`, it
+   silently dropped such elements, instead of returning `NULL` for
+   them. Similarly, `x[i] <- value` did not ignore missing indices
+   when `value` is of length one, and did not give an error when it
+   is longer.
+
+ * Subsetting a list environment did not truncate fractional indices
+   toward zero, as done for lists and arrays. For example, `x[-1.5]`
+   returned all elements instead of behaving as `x[-1]`, which drops
+   the first element. Similarly, `x[1.5, 2.9]` behaved as `x[1, 3]`
+   instead of `x[1, 2]`.
+
+ * `parse_env_subset()` on `x[[i, j]]` with dimensions did not give an
+   error for zero indices, e.g.  `x[[1, 0]]`, but returned an empty
+   target, although it gave an error for `x[[0]]`.
+
+ * `parse_env_subset()` on `x[[i, j]]` with named dimensions returned
+   elements `idx` and `exists` with dimnames that should not be there.
+
+ * `parse_env_subset()` on `x[[i, j]]` with more or fewer dimensions
+   than subscripts would either give an obscure error or, silently, an
+   incorrect index.
+
+ * `parse_env_subset()` did not truncate fractional indices, as done
+   for lists and arrays. For example, `x[[1.5]]` gave `idx = 1.5`
+   instead of `1`, and `x[[0.5]]` gave an obscure error instead of an
+   error on a zero index.
+
+ * `parse_env_subset()` would treat `x[i]` as `x["i"]`, and similarly
+   for more dimensions, e.g. `parse_env_subset(x[i, j])`.
+
+ * `parse_env_subset()` on `x[names]` gave an obscure error when
+   `length(names) > 1` and some names did not exist.
+
+ * `parse_env_subset()` on `x$name` and `x[["name"]]` would report
+   `exists = TRUE` even if `name` did not exist in `x` but in one of
+   the parent environments.
+
+ * `parse_env_subset()` treated a `NULL` subset as an empty one, e.g.
+   `x[NULL]` and `x[1, NULL]` selected all elements instead of none.
+   Also, `x[[]]`, `x[[NULL]]`, and `x[[integer(0)]]`, and similarly
+   for more dimensions, e.g. `x[[1, ]]`, did not give an error, as
+   done for lists and arrays.
+
+ * `parse_env_subset("1a", envir = x)` gave an error on 'Not a valid
+   variable name', although any name is a valid variable name, e.g.
+   `x <- listenv("1a" = 1)`.
+
+
+# Version 1.0.0 [2026-06-21]
 
 ## Significant Changes
 
