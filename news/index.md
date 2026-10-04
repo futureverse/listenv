@@ -2,6 +2,10 @@
 
 ## Version (development version)
 
+- …
+
+## Version 1.1.0
+
 ### Significant Changes
 
 - [`parse_env_subset()`](https://listenv.futureverse.org/reference/parse_env_subset.md)

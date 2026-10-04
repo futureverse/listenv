@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0-9025</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0-9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,13 +70,17 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="version-development-version">Version (development version)<a class="anchor" aria-label="anchor" href="#version-development-version"></a></h2>
+<ul><li>…</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="version-110">Version 1.1.0<a class="anchor" aria-label="anchor" href="#version-110"></a></h2>
 <div class="section level3">
-<h3 id="significant-changes-development-version">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-development-version"></a></h3>
+<h3 id="significant-changes-1-1-0">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-1-1-0"></a></h3>
 <ul><li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[NULL]</code> and <code>x[1, NULL]</code> now selects zero elements - it used to select all elements.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[]]</code>, <code>x[[NULL]]</code>, <code>x[[integer(0)]]</code> now gives an error as R does for lists - it used to select all elements.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<h3 id="bug-fixes-1-1-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-1-0"></a></h3>
 <ul><li><p>Growing a list environment with dimensions, e.g. <code>length(x) &lt;- n</code>, <code>x[[n]] &lt;- value</code>, <code>x[n] &lt;- value</code>, and <code>x$name &lt;- value</code>, where <code>n &gt; length(x)</code> or <code>name</code> is a new element, did not drop the dimensions, as done for lists, which left <code>x</code> in an invalid state.</p></li>
 <li><p><code>x[[i, j]]</code> on a list environment with dimensions gave an obscure error when the subscripts referred to more than one element.</p></li>
 <li><p><code>x[[name]]</code> where <code>length(name) != 1</code> gave an obscure error.</p></li>
