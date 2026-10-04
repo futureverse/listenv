@@ -64,11 +64,13 @@ str(target)
 stopifnot(identical(target$envir, x), target$name == "a",
           is.na(target$idx), !target$exists)
 
-res <- try(target <- parse_env_subset(1, substitute = FALSE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(1, substitute = FALSE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[1]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 x$a <- 1
 target <- parse_env_subset(x$a, substitute = TRUE)
@@ -231,8 +233,9 @@ stopifnot(length(target$idx) == 0)
 str(target)
 
 ## Zero-length subsets are invalid for [[, as for lists
-res <- try(parse_env_subset(x[[integer(0L)]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[[integer(0L)]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 target <- parse_env_subset(x[0], substitute = TRUE)
 stopifnot(length(target$idx) == 0)
@@ -294,9 +297,9 @@ target <- parse_env_subset(y[-1.5], substitute = TRUE)
 str(target)
 stopifnot(identical(target$name, c("b", "c")), all(target$idx == 2:3))
 
-res <- try(parse_env_subset(y[[0.5]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"),
-          grepl("zero", conditionMessage(attr(res, "condition"))))
+res <- tryCatch(parse_env_subset(y[[0.5]], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"),
+          grepl("zero", conditionMessage(res)))
 rm(list = "y")
 
 ## An empty subset selects all elements for [, but a NULL subset
@@ -316,14 +319,15 @@ str(target)
 stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
 
 ## ... whereas both are invalid for [[, as for lists
-res <- try(parse_env_subset(y[[]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(y[[]], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(parse_env_subset(y[[NULL]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(y[[NULL]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(parse_env_subset(y[[i]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(y[[i]], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 rm(list = c("y", "i"))
 
 ## Odds and ends
@@ -390,8 +394,9 @@ res <- tryCatch({
 }, error = identity)
 stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[0]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[0]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Any name is a valid variable name, as for assign(), including
 ## non-syntactic names, e.g. listenv("1a" = 1)
@@ -419,74 +424,79 @@ stopifnot(target$name == "_a", !target$exists)
 target <- parse_env_subset("_a", substitute = TRUE, is_variable = FALSE)
 stopifnot(target$name == "_a", !target$exists)
 
-res <- try(target <- parse_env_subset(1:10, envir = x, substitute = FALSE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(1:10, envir = x, substitute = FALSE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(
+res <- tryCatch(
   target <- parse_env_subset(c("a", "b"), envir = x, substitute = FALSE),
-  silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+  error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x@a, substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x@a, substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Object not found
 if (exists("nonexistent_obj_xyz", envir = globalenv())) {
   rm("nonexistent_obj_xyz", envir = globalenv())
 }
-res <- try(parse_env_subset(nonexistent_obj_xyz[["a"]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(nonexistent_obj_xyz[["a"]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Object not an environment
 z_not_env <- 42
-res <- try(parse_env_subset(z_not_env[["a"]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(z_not_env[["a"]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 rm(z_not_env)
 
 ## [[ with non-existing symbol in envir
 x <- listenv()
-res <- try(parse_env_subset(x[[nonexistent_var_xyz]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[[nonexistent_var_xyz]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## NA in subset
 x <- listenv()
 x[[1]] <- 1
-res <- try(parse_env_subset(x[[NA]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[[NA]], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Unknown dimnames in multi-dim
 x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 dimnames(x) <- list(c("a", "b"), c("c", "d", "e"))
-res <- try(parse_env_subset(x[["z", "c"]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[["z", "c"]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Negative indices with [[ on multi-dim
-res <- try(parse_env_subset(x[[-1, 1]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[[-1, 1]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Mixed pos/neg in multi-dim [
-res <- try(parse_env_subset(x[c(-1, 1), 1], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[c(-1, 1), 1], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Negative indices in 1D [[
 x <- listenv()
 x[1:3] <- 1:3
-res <- try(parse_env_subset(x[[-1]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[[-1]], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Mixed pos/neg in 1D [
-res <- try(parse_env_subset(x[c(-1, 1)], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[c(-1, 1)], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Multi-dim subset on non-listenv environment
 x <- new.env()
-res <- try(parse_env_subset(x[1, 2], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[1, 2], substitute = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Numeric index with listenv 'envir'
 x <- listenv(a = 1, b = 2)
@@ -495,18 +505,20 @@ stopifnot(identical(res$name, "a"), res$idx == 1, res$exists)
 
 ## Unsupported operator
 x <- listenv()
-res <- try(parse_env_subset(foo(x, 1), substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(foo(x, 1), substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Operator '$' with more than two arguments
 expr <- call("$", quote(x), quote(a), quote(b))
-res <- try(parse_env_subset(expr, substitute = FALSE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(expr, substitute = FALSE), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Non-existing symbol used as subscript
 x <- listenv(a = 1)
-res <- try(parse_env_subset(x[non_existing_symbol], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(parse_env_subset(x[non_existing_symbol], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Expressions that do not specify a target give an informative error
 a <- 1

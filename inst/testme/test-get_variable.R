@@ -55,25 +55,25 @@ print(x[[2]])
 print(x[[3]])
 
 ## Out-of-bound subsetting
-res <- try(x[[0]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[0]], error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Out-of-bound subsetting
-res <- try(x[[4]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[4]], error = identity)
+stopifnot(inherits(res, "error"))
 
 print(get_variable(x, 1L, mustExist = FALSE))
 print(get_variable(x, 2L, mustExist = FALSE))
 print(get_variable(x, 3L, mustExist = FALSE))
 
 ## Out-of-bound element
-res <- try(var <- get_variable(x, 0L, mustExist = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(var <- get_variable(x, 0L, mustExist = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Out-of-bound element
-res <- try(var <- get_variable(x, length(x) + 1L, mustExist = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(var <- get_variable(x, length(x) + 1L, mustExist = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,14 +84,14 @@ length(x) <- 3L
 names(x) <- c("a", "b", "c")
 
 ## Non-existing element
-res <- try(var <- get_variable(x, "z", mustExist = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(var <- get_variable(x, "z", mustExist = TRUE), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(var <- get_variable(x, c("a", "b")), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(var <- get_variable(x, c("a", "b")), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(var <- get_variable(x, 1 + 2i), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(var <- get_variable(x, 1 + 2i), error = identity)
+stopifnot(inherits(res, "error"))
 
 
 
@@ -135,16 +135,16 @@ x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 
 ## Wrong number of indices
-res <- try(get_variable(x, c(1, 2, 3)), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(get_variable(x, c(1, 2, 3)), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Missing values in index
-res <- try(get_variable(x, c(NA_integer_, 1L)), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(get_variable(x, c(NA_integer_, 1L)), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Out-of-range index
-res <- try(get_variable(x, c(3, 1)), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(get_variable(x, c(3, 1)), error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## Cleanup

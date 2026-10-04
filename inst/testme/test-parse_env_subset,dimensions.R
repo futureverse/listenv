@@ -178,9 +178,9 @@ message("*** parse_env_subset() on multi-dim listenv - exceptions ...")
 x <- listenv()
 
 ## Multidimensional subsetting on 'x' without dimensions
-res <- try(target <- parse_env_subset(x[[1, 2]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1, 2]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Multi-dimensional subsetting
 x <- listenv()
@@ -189,16 +189,17 @@ dim(x) <- c(2, 3)
 
 
 ## Zero indices are invalid for [[, as for lists
-res <- try(target <- parse_env_subset(x[[0]], substitute = TRUE), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[0]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[1, 0]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1, 0]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[0, 2]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[0, 2]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## ... but select nothing for [, as for lists
 target <- parse_env_subset(x[1, 0], substitute = TRUE)
@@ -208,10 +209,10 @@ stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
 target <- parse_env_subset(x[[1.5, 2]], substitute = TRUE)
 stopifnot(target$idx == 3L)
 
-res <- try(target <- parse_env_subset(x[[1, 0.5]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"),
-          grepl("zero", conditionMessage(attr(res, "condition"))))
+res <- tryCatch(target <- parse_env_subset(x[[1, 0.5]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"),
+          grepl("zero", conditionMessage(res)))
 
 ## An empty subset selects all elements of a dimension for [, but a
 ## NULL subset selects nothing, as for arrays
@@ -222,17 +223,17 @@ target <- parse_env_subset(x[1, NULL], substitute = TRUE)
 stopifnot(length(target$idx) == 0L, length(target$exists) == 0L)
 
 ## ... whereas both are invalid for [[, as for arrays
-res <- try(target <- parse_env_subset(x[[1, ]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1, ]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[1, NULL]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1, NULL]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
-           silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(target <- parse_env_subset(x[[1, 2, 3]], substitute = TRUE),
+                error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Incorrect number of subscripts
 x <- listenv()

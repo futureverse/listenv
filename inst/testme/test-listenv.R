@@ -735,53 +735,53 @@ x <- listenv()
 length(x) <- 3L
 names(x) <- c("a", "b", "c")
 
-res <- try(names(x) <- c("a", "b"), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(names(x) <- c("a", "b"), error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1:2]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1:2]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[0]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[0]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[length(x) + 1]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[length(x) + 1]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1 + 2i]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1 + 2i]], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[1 + 2i], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1 + 2i], error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1 + 2i]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1 + 2i]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[1 + 2i] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1 + 2i] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[integer(0L)]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[integer(0L)]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[1:2]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1:2]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[Inf]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[Inf]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[0]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[0]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[-1]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[-1]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[character(0L)]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[character(0L)]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[c("a", "b")]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[c("a", "b")]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
-res <- try(x[[""]] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[""]] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -853,8 +853,8 @@ print(x)
 ## map() is defunct
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1, b = 2)
-res <- try(map(x), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(map(x), error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -871,8 +871,8 @@ x$nonexistent <- NULL
 x[[10L]] <- NULL
 
 ## [<- with zero-length replacement value
-res <- try({ x[1:2] <- list() }, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch({ x[1:2] <- list() }, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -901,20 +901,20 @@ x <- as.listenv(1:6)
 dim(x) <- c(2, 3)
 
 ## [.listenv: wrong number of dimensions
-res <- try(x[1, 2, 3], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2, 3], error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [<-.listenv: wrong number of dimensions
-res <- try(x[1, 2, 3] <- 1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1, 2, 3] <- 1, error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [<-.listenv: multi-dim NULL with wrong number of non-missing dims
-res <- try(x[, ] <- NULL, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[, ] <- NULL, error = identity)
+stopifnot(inherits(res, "error"))
 
 ## [.listenv: mixed negative and positive subscripts
-res <- try(x[c(-1, 1)], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(-1, 1)], error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -939,16 +939,16 @@ stopifnot(is.null(x[["nonexistent"]]))
 ## Negative length error
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
-res <- try(length(x) <- -1, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(length(x) <- -1, error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## map() is defunct
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1)
-res <- try(listenv::map(x), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(listenv::map(x), error = identity)
+stopifnot(inherits(res, "error"))
 
 ## Test deprecated path of map()
 Sys.setenv(R_LISTENV_MAP_DEPRECATED = "deprecated")
@@ -963,38 +963,38 @@ Sys.unsetenv("R_LISTENV_MAP_DEPRECATED")
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
 x[1:3] <- 1:3
-res <- try(x[c(1, -1)], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[c(1, -1)], error = identity)
+stopifnot(inherits(res, "error"))
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## [<- with zero-length replacement
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv()
 x[1:3] <- 1:3
-res <- try(x[1] <- list(), silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[1] <- list(), error = identity)
+stopifnot(inherits(res, "error"))
 
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## [[i, j]] on listenv without dimensions
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1, b = 2)
-res <- try(x[[1, 2]], silent = TRUE)
-stopifnot(inherits(res, "try-error"))
-res <- try(x[[1, 2]] <- 3, silent = TRUE)
-stopifnot(inherits(res, "try-error"))
+res <- tryCatch(x[[1, 2]], error = identity)
+stopifnot(inherits(res, "error"))
+res <- tryCatch(x[[1, 2]] <- 3, error = identity)
+stopifnot(inherits(res, "error"))
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ## [[<- NULL with invalid names or indices
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 x <- listenv(a = 1, b = 2)
 for (name in list(character(0L), c("a", "b"), "")) {
-  res <- try(x[[name]] <- NULL, silent = TRUE)
-  stopifnot(inherits(res, "try-error"))
+  res <- tryCatch(x[[name]] <- NULL, error = identity)
+  stopifnot(inherits(res, "error"))
 }
 for (i in list(integer(0L), 1:2, NA_real_, Inf, 0, -1)) {
-  res <- try(x[[i]] <- NULL, silent = TRUE)
-  stopifnot(inherits(res, "try-error"))
+  res <- tryCatch(x[[i]] <- NULL, error = identity)
+  stopifnot(inherits(res, "error"))
 }
 stopifnot(identical(names(x), c("a", "b")), length(x) == 2L)
 
