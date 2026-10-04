@@ -14,8 +14,10 @@
 
 ### Bug Fixes
 
-- `length(x) <- n` on a list environment with dimensions did not drop
-  the dimensions, which left `x` in an invalid state.
+- Growing a list environment with dimensions, e.g. `length(x) <- n`,
+  `x[[n]] <- value`, `x[n] <- value`, and `x$name <- value`, where
+  `n > length(x)` or `name` is a new element, did not drop the
+  dimensions, as done for lists, which left `x` in an invalid state.
 
 - `x[[i, j]]` on a list environment with dimensions gave an obscure
   error when the subscripts referred to more than one element.
@@ -28,6 +30,17 @@
 - `x[i] <- value` gave an error if `i` contained zeros,
   e.g. `x[c(0, 2)] <- value` and `x[0] <- NULL`, instead of ignoring
   them, as done for lists.
+
+- `x[i] <- value` gave an error if `i` contained negative indices,
+  e.g. `x[-1] <- value` and `x[-1] <- NULL`, instead of assigning or
+  removing all other elements, as done for lists.
+
+- `x[i]` did not handle missing values in `i` as done for lists. For
+  numeric indices, e.g. `x[c(1, NA)]`, it gave an obscure error, and for
+  logical indices, e.g. `x[NA]` and `x[c(TRUE, NA), ]`, it silently
+  dropped such elements, instead of returning `NULL` for them.
+  Similarly, `x[i] <- value` did not ignore missing indices when `value`
+  is of length one, and did not give an error when it is longer.
 
 - Subsetting a list environment did not truncate fractional indices
   toward zero, as done for lists and arrays. For example, `x[-1.5]`

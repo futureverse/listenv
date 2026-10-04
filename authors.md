@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/futureverse/listenv/blob/HEAD/DESCRIPTION)
 
 Bengtsson H (2026). *listenv: Environments Behaving (Almost) as Lists*.
-R package version 1.0.0-9020, <https://listenv.futureverse.org>.
+R package version 1.0.0-9025, <https://listenv.futureverse.org>.
 
-    @Manual{,
-      title = {listenv: Environments Behaving (Almost) as Lists},
-      author = {Henrik Bengtsson},
-      year = {2026},
-      note = {R package version 1.0.0-9020},
-      url = {https://listenv.futureverse.org},
-    }
+@Manual{,\
+  title = {listenv: Environments Behaving (Almost) as Lists},\
+  author = {Henrik Bengtsson},\
+  year = {2026},\
+  note = {R package version 1.0.0-9025},\
+  url = {https://listenv.futureverse.org},\
+}

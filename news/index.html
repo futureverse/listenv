@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">listenv</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0-9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0-9025</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,11 +77,13 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li><p><code>length(x) &lt;- n</code> on a list environment with dimensions did not drop the dimensions, which left <code>x</code> in an invalid state.</p></li>
+<ul><li><p>Growing a list environment with dimensions, e.g. <code>length(x) &lt;- n</code>, <code>x[[n]] &lt;- value</code>, <code>x[n] &lt;- value</code>, and <code>x$name &lt;- value</code>, where <code>n &gt; length(x)</code> or <code>name</code> is a new element, did not drop the dimensions, as done for lists, which left <code>x</code> in an invalid state.</p></li>
 <li><p><code>x[[i, j]]</code> on a list environment with dimensions gave an obscure error when the subscripts referred to more than one element.</p></li>
 <li><p><code>x[[name]]</code> where <code>length(name) != 1</code> gave an obscure error.</p></li>
 <li><p><code>x[[NA]]</code>, <code>x[[NA_integer_]]</code> and <code>x[[NA_real_]]</code> gave an obscure error instead of returning <code>NULL</code>, as done for lists.</p></li>
 <li><p><code>x[i] &lt;- value</code> gave an error if <code>i</code> contained zeros, e.g. <code>x[c(0, 2)] &lt;- value</code> and <code>x[0] &lt;- NULL</code>, instead of ignoring them, as done for lists.</p></li>
+<li><p><code>x[i] &lt;- value</code> gave an error if <code>i</code> contained negative indices, e.g. <code>x[-1] &lt;- value</code> and <code>x[-1] &lt;- NULL</code>, instead of assigning or removing all other elements, as done for lists.</p></li>
+<li><p><code>x[i]</code> did not handle missing values in <code>i</code> as done for lists. For numeric indices, e.g. <code>x[c(1, NA)]</code>, it gave an obscure error, and for logical indices, e.g. <code>x[NA]</code> and <code>x[c(TRUE, NA), ]</code>, it silently dropped such elements, instead of returning <code>NULL</code> for them. Similarly, <code>x[i] &lt;- value</code> did not ignore missing indices when <code>value</code> is of length one, and did not give an error when it is longer.</p></li>
 <li><p>Subsetting a list environment did not truncate fractional indices toward zero, as done for lists and arrays. For example, <code>x[-1.5]</code> returned all elements instead of behaving as <code>x[-1]</code>, which drops the first element. Similarly, <code>x[1.5, 2.9]</code> behaved as <code>x[1, 3]</code> instead of <code>x[1, 2]</code>.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[i, j]]</code> with dimensions did not give an error for zero indices, e.g. <code>x[[1, 0]]</code>, but returned an empty target, although it gave an error for <code>x[[0]]</code>.</p></li>
 <li><p><code><a href="../reference/parse_env_subset.html">parse_env_subset()</a></code> on <code>x[[i, j]]</code> with named dimensions returned elements <code>idx</code> and <code>exists</code> with dimnames that should not be there.</p></li>
