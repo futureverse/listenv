@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 1.1.0 [2026-10-04]
 
 ## Significant Changes
 
@@ -82,7 +82,7 @@
    `x <- listenv("1a" = 1)`.
 
 
-# Version 1.0.0 (2026-06-21)
+# Version 1.0.0 [2026-06-21]
 
 ## Significant Changes
 
