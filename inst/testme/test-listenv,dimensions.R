@@ -597,6 +597,56 @@ dim(x) <- c(2, 3)
 res <- tryCatch(x[[1, 0.5]], error = identity)
 stopifnot(inherits(res, "error"))
 
+## Missing logical indices give NULL elements for [, as for lists
+exprs <- list(
+  quote(x[NA, 1]),
+  quote(x[c(TRUE, NA), ]),
+  quote(x[c(TRUE, NA), , drop = FALSE]),
+  quote(x[1, c(NA, TRUE, FALSE)]),
+  quote(x[[NA, 1]]),
+  quote(x[[c(TRUE, NA), 1]]),
+  quote(x[NA, 1] <- 0),
+  quote(x[c(TRUE, NA), 1] <- 0),
+  quote(x[c(TRUE, NA), ] <- list(7, 8, 9)),
+  quote(x[[NA, 1]] <- 0)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  is_assign <- (as.character(expr[[1]]) == "<-")
+  x0 <- as.list(1:6)
+  dim(x0) <- c(2, 3)
+  dimnames(x0) <- list(c("r1", "r2"), c("A", "B", "C"))
+  x <- x0
+  truth <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  x <- as.listenv(x0)
+  res <- tryCatch({
+    res <- eval(expr)
+    if (is_assign) x else res
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), x0)
+    )
+  } else {
+    if (inherits(res, "listenv")) res <- as.list(res)
+    ## FIXME: Dropping to a vector does not preserve the dimnames as
+    ## names, e.g. x[1, ], as done for lists
+    if (is.list(truth) && is.null(dim(truth))) names(truth) <- NULL
+    stopifnot(identical(res, truth))
+  }
+}
+
+## x[[NA, 1]] is an error, also when it refers to a single element
+x <- as.listenv(1:3)
+dim(x) <- c(1, 3)
+res <- tryCatch(x[[NA, 1]], error = identity)
+stopifnot(inherits(res, "error"))
+
 message("* List environment and multiple dimensions ... DONE")
 
 

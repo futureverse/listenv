@@ -401,7 +401,8 @@ to_index <- function(x, idxs, on_out_of_bound = c("error", "NA")) {
 	      kk, ni, d)
       }
       if (ni < d) i <- rep(i, length.out = d)
-      i <- which(i)
+      ## Missing values are kept as missing indices, as for arrays
+      i <- seq_along(i)[i]
     } else if (is.numeric(i)) {
       d <- dim[kk]
       ## Fractional indices are truncated toward zero, as for arrays
@@ -514,6 +515,9 @@ subset_to_index <- function(x, idxs, missing, envir) {
     if (length(i) != 1L) {
       stopf("Subsetting of more than one element at a time is not allowed for listenv's: %s", length(i))  #nolint
     }
+    if (is.na(i)) {
+      stop("Subscript out of bounds: NA", call. = FALSE)
+    }
   } else {
     i <- idxs[[1L]]
 
@@ -598,7 +602,8 @@ subset_to_index <- function(x, idxs, missing, envir) {
     }
   } else if (is.logical(i)) {
     if (length(i) < nmap) i <- rep(i, length.out = nmap)
-    i <- which(i)
+    ## Missing values are kept as missing indices, as for lists
+    i <- seq_along(i)[i]
   } else {
     return(NextMethod())
   }
@@ -943,7 +948,8 @@ remove_by_index <- function(x, i) {
   if (is.logical(i)) {
     n <- length(x)
     if (ni < n) i <- rep(i, length.out = n)
-    i <- which(i)
+    ## Missing values are kept as missing indices, as for lists
+    i <- seq_along(i)[i]
     ni <- length(i)
   }
 

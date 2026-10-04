@@ -1229,6 +1229,48 @@ for (expr in exprs) {
 message("* Missing indices in [<- ... DONE")
 
 
+## Missing logical indices give NULL elements for [, as for lists
+message("* Missing logical indices in [ and [<- ...")
+exprs <- list(
+  quote(x[NA]),
+  quote(x[c(TRUE, NA)]),
+  quote(x[c(NA, FALSE, TRUE)]),
+  quote(x[c(TRUE, TRUE, TRUE, NA)]),
+  quote(x[NA] <- 9),
+  quote(x[c(TRUE, NA)] <- 9),
+  quote(x[c(TRUE, NA)] <- c(8, 9)),
+  quote(x[c(TRUE, NA)] <- NULL)
+)
+for (named in c(TRUE, FALSE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    is_assign <- (as.character(expr[[1]]) == "<-")
+    x <- list(a = 1, b = 2, c = 3)
+    if (!named) names(x) <- NULL
+    x0 <- x
+    truth <- tryCatch({
+      res <- eval(expr)
+      if (is_assign) x else res
+    }, error = identity)
+    x <- as.listenv(x0)
+    res <- tryCatch({
+      res <- eval(expr)
+      as.list(if (is_assign) x else res)
+    }, error = identity)
+    if (inherits(truth, "error")) {
+      stopifnot(
+        inherits(res, "error"),
+        ## A failed assignment must not modify 'x'
+        identical(as.list(x), x0)
+      )
+    } else {
+      stopifnot(identical(res, truth))
+    }
+  }
+}
+message("* Missing logical indices in [ and [<- ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())
