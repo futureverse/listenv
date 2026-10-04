@@ -709,6 +709,12 @@ assign_by_name <- function(x, name, value) {
     names[length(map)] <- var
     names(map) <- names
     mapping(x) <- map
+
+    ## Remove dimensions, cf. base R
+    if (!is.null(dim(x))) {
+      dim(x) <- NULL
+      names(x) <- names
+    }
   }
 
   ## Assign value
@@ -750,6 +756,13 @@ assign_by_index <- function(x, i, value) {
 
     ## Update map
     mapping(x) <- map
+
+    ## Remove dimensions, cf. base R
+    if (i > n && !is.null(dim(x))) {
+      names <- names(x)
+      dim(x) <- NULL
+      names(x) <- names
+    }
   } else {
     assign(var, value, envir = x, inherits = FALSE)
   }

@@ -642,6 +642,68 @@ for (expr in exprs) {
   }
 }
 
+## Growing a list environment drops its dimensions, as for lists
+exprs <- list(
+  quote(x[[7]] <- 0),
+  quote(x[[8]] <- 0),
+  quote(x[7] <- 0),
+  quote(x[c(1, 8)] <- 0),
+  quote(x$foo <- 1),
+  quote(x[["foo"]] <- 1),
+  quote(x["foo"] <- 1),
+  quote(x[[4]] <- 0),
+  quote(x[[7]] <- NULL)
+)
+for (named in c(FALSE, TRUE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    x0 <- as.list(1:6)
+    dim(x0) <- c(2, 3)
+    dimnames(x0) <- list(c("r1", "r2"), c("A", "B", "C"))
+    if (named) names(x0) <- letters[1:6]
+    x <- x0
+    eval(expr)
+    truth <- x
+    x <- as.listenv(x0)
+    eval(expr)
+    stopifnot(
+      length(x) == length(truth),
+      identical(dim(x), dim(truth)),
+      identical(dimnames(x), dimnames(truth)),
+      identical(names(x), names(truth)),
+      identical(as.list(x), truth)
+    )
+  }
+}
+
+## Filling empty elements does not grow a list environment, so its
+## dimensions are kept
+exprs <- list(
+  quote(x[[1]] <- 1),
+  quote(x[[6]] <- 1),
+  quote(x[2, 3] <- 1),
+  quote(x[[2, 3]] <- 1),
+  quote(x[["r2", "C"]] <- 1),
+  quote(x[] <- 1),
+  quote(for (kk in 1:6) x[[kk]] <- kk),
+  quote(x[["c"]] <- 1),
+  quote(x$c <- 1)
+)
+for (expr in exprs) {
+  message(sprintf("- %s (empty)", paste(deparse(expr), collapse = "")))
+  x <- listenv()
+  dim(x) <- c(2, 3)
+  dimnames(x) <- list(c("r1", "r2"), c("A", "B", "C"))
+  names(x) <- letters[1:6]
+  eval(expr)
+  stopifnot(
+    length(x) == 6L,
+    identical(dim(x), c(2L, 3L)),
+    identical(dimnames(x), list(c("r1", "r2"), c("A", "B", "C"))),
+    identical(names(x), letters[1:6])
+  )
+}
+
 ## x[[NA, 1]] is an error, also when it refers to a single element
 x <- as.listenv(1:3)
 dim(x) <- c(1, 3)
