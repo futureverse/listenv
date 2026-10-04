@@ -1158,6 +1158,77 @@ for (expr in exprs) {
 message("* Negative indices in [<- ... DONE")
 
 
+## Missing indices give NULL elements for [, as for lists
+message("* Missing indices in [ ...")
+exprs <- list(
+  quote(x[c(1, NA)]),
+  quote(x[NA_real_]),
+  quote(x[NA_integer_]),
+  quote(x[c(NA_real_, NA_real_)]),
+  quote(x[c(2, NaN)]),
+  quote(x[c(0, NA)]),
+  quote(x[c(1.5, NA)]),
+  quote(x[c(-1, NA)])
+)
+for (named in c(TRUE, FALSE)) {
+  for (expr in exprs) {
+    message(sprintf("- %s (named = %s)", paste(deparse(expr), collapse = ""), named))
+    x <- list(a = 1, b = 2, c = 3)
+    if (!named) names(x) <- NULL
+    truth <- tryCatch(eval(expr), error = identity)
+    x <- as.listenv(x)
+    res <- tryCatch(as.list(eval(expr)), error = identity)
+    if (inherits(truth, "error")) {
+      stopifnot(inherits(res, "error"))
+    } else {
+      stopifnot(identical(res, truth))
+    }
+  }
+}
+message("* Missing indices in [ ... DONE")
+
+
+## Missing indices are ignored for [<-, as for lists, but only if
+## the replacement value is of length one
+message("* Missing indices in [<- ...")
+exprs <- list(
+  quote(x[c(1, NA)] <- 9),
+  quote(x[NA_real_] <- 9),
+  quote(x[NA_integer_] <- 9),
+  quote(x[c(2, NaN)] <- 9),
+  quote(x[c(1, NA, NA)] <- 9),
+  quote(x[c(1, NA, NA)] <- list(9)),
+  quote(x[c(1, NA)] <- c(8, 9)),
+  quote(x[c(NA_real_, NA_real_)] <- c(8, 9)),
+  quote(x[c(1, NA)] <- NULL),
+  quote(x[NA_real_] <- NULL),
+  quote(x[c(-1, NA)] <- 9)
+)
+for (expr in exprs) {
+  message(sprintf("- %s", paste(deparse(expr), collapse = "")))
+  x <- list(a = 1, b = 2, c = 3)
+  truth <- tryCatch({
+    eval(expr)
+    x
+  }, error = identity)
+  x <- as.listenv(list(a = 1, b = 2, c = 3))
+  res <- tryCatch({
+    eval(expr)
+    as.list(x)
+  }, error = identity)
+  if (inherits(truth, "error")) {
+    stopifnot(
+      inherits(res, "error"),
+      ## A failed assignment must not modify 'x'
+      identical(as.list(x), list(a = 1, b = 2, c = 3))
+    )
+  } else {
+    stopifnot(identical(res, truth))
+  }
+}
+message("* Missing indices in [<- ... DONE")
+
+
 ## Cleanup
 options(oopts)
 rm(list = setdiff(ls(envir = globalenv()), ovars), envir = globalenv())

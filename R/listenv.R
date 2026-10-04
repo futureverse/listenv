@@ -584,17 +584,17 @@ subset_to_index <- function(x, idxs, missing, envir) {
     i <- match(name, table = names)
   } else if (is.numeric(i)) {
     ## Exclude elements with negative indices?
-    if (any(i < 0)) {
+    if (any(i < 0, na.rm = TRUE)) {
       stop_if_not(is.null(dim(i)))
-      if (any(i > 0)) {
+      if (any(i > 0, na.rm = TRUE) || anyNA(i)) {
         stop("Only 0's may be mixed with negative subscripts")
       }
       ## Drop elements
       i <- setdiff(seq_len(nmap), -i)
     }
-    ## Drop zeros?
+    ## Drop zeros, but keep missing indices, which give NULL elements
     if (is.null(dim(i))) {
-      i <- i[i != 0]
+      i <- i[is.na(i) | i != 0]
     }
   } else if (is.logical(i)) {
     if (length(i) < nmap) i <- rep(i, length.out = nmap)
@@ -619,7 +619,7 @@ subset_to_index <- function(x, idxs, missing, envir) {
       names(res) <- names2
     }
 
-    # Ignore out-of-range indices
+    # Ignore missing and out-of-range indices
     valid <- which(i <= nmap)
     for (kk in valid) {
       value <- x[[i[kk]]]
@@ -956,6 +956,14 @@ remove_by_index <- function(x, i) {
         stop("Only 0's may be mixed with negative subscripts", call. = FALSE)
       }
       i <- setdiff(seq_along(x), -i)
+    }
+    ## Missing indices are ignored, as for lists, but only if the
+    ## replacement value is of length one
+    if (anyNA(i)) {
+      if (length(value) > 1L) {
+        stop("NAs are not allowed in subscripted assignments", call. = FALSE)
+      }
+      i <- i[!is.na(i)]
     }
     ni <- length(i)
   }

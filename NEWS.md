@@ -29,6 +29,11 @@
    e.g. `x[-1] <- value` and `x[-1] <- NULL`, instead of assigning or
    removing all other elements, as done for lists.
 
+ * `x[i]` did not return `NULL` for missing-value elements in `i`, as
+   regular lists do. It gave an obscure error instead. Similarly,
+   `x[i] <- value` did not ignore missing-value elements, but an
+   error.
+
  * Subsetting a list environment did not truncate fractional indices
    toward zero, as done for lists and arrays. For example, `x[-1.5]`
    returned all elements instead of behaving as `x[-1]`, which drops
