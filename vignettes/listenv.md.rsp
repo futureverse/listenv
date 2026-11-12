@@ -12,6 +12,7 @@
 R.utils::use("R.utils")
 use("listenv")
 options("withCapture/newline" = FALSE)
+options("withCapture/style" = "script")
 %>
 # <%@meta name="title"%>
 
@@ -283,9 +284,9 @@ x["b", -2, drop = FALSE]
 
 Note, whenever dimensions are set using `dim(x) <- dims` both the dimensional names and the element names are removed, e.g.
 ```r
-> dim(x) <- NULL
-> names(x)
-NULL
+dim(x) <- NULL
+names(x)
+#> NULL
 ```
 This behavior is by design, cf. `help("dim", package="base")`.
 
